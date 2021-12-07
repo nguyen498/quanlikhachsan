@@ -1,0 +1,29 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Trang chu {% endblock %}
+
+{% block content %}
+
+<h1 class="subject">{{ s }}</h1>
+
+{% if room %}
+<div class="row">
+    {% for r in room %}
+    <div class="col-md-3 col-xs-12" style="padding:5px">
+        <div class="card" style="padding:5px">
+          <img class="card-img-top"  src="{{ url_for('static', filename=r.image) }}" alt="{{ r.name }}">
+          <div class="card-body">
+            <h4 class="card-title">{{ r.name }}</h4>
+              <p class="card-text">{{ r.description }} </p>
+              <p class="card-text text-danger">{{ "{:,.1f}".format(r.price) }} VND/Đêm</p>
+            <a href="#" class="btn btn-primary">Đặt phòng</a>
+          </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p><i>Khong co san pham nao!!!</i></p>
+{% endif %}
+
+{% endblock %}

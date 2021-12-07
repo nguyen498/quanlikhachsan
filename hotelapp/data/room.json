@@ -1,0 +1,36 @@
+[{
+          "id": 1,
+          "name": "Deluxe giường đơn",
+          "description": "Wifi miễn phí\n1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+          "price": 400000,
+          "image": "images/p1.png",
+          "kind_id": 1
+        }, {
+          "id": 2,
+          "name": "Phòng hai giường thường",
+          "description": "Wifi miễn phí\n1 giường lớn,1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+          "price": 700000,
+          "image": "images/p2.png",
+          "kind_id": 2
+        }, {
+          "id": 3,
+          "name": "Phòng ba giường thường",
+          "description": "Wifi miễn phí\n1 giường lớn, 2 giường nhỏ\nDiện tích phòng: 50 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+          "price": 1000000,
+          "image": "images/p3.png",
+          "kind_id": 3
+        },{
+          "id": 4,
+          "name": "Phòng gia đình thường",
+          "description": "Wifi miễn phí\n2 giường lớn, 1 giường nhỏ\nDiện tích phòng: 60 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+          "price": 1200000,
+          "image": "images/p4.png",
+          "kind_id": 4
+        },{
+          "id": 5,
+          "name": "Homestay",
+          "description": "Wifi miễn phí\n2 phòng lớn, 2 phòng nhỏ\nDiện tích nhà: 100 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+          "price": 3000000,
+          "image": "images/p5.png",
+          "kind_id": 5
+}]
