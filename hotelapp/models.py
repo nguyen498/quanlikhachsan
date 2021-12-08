@@ -1,12 +1,32 @@
+from datetime import datetime
 from sqlalchemy import Column, Integer, Float, String, Boolean, Enum, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from hotelapp import db
+from enum import Enum as UserEnum
 
 
 class BaseModel(db.Model):
     __abstract__ = True
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+
+
+class UserRole(UserEnum):
+    ADMIN = 1
+    USER = 2
+
+
+class User(BaseModel):
+    name = Column(String(50), nullable=False)
+    username = Column(String(50), nullable=False, unique=True)
+    password = Column(String(50), nullable=False)
+    email = Column(String(50))
+    active = Column(Boolean, default=True)
+    joined_date = Column(DateTime, default=datetime.now())
+    user_role = Column(Enum(UserRole), default=UserRole.USER)
+
+    def __str__(self):
+        return self.name
 
 
 class KindOfRoom(BaseModel):
@@ -35,7 +55,7 @@ class Room(BaseModel):
 
 
 if __name__ == '__main__':
-    db.create_all()
+   db.create_all()
 
     # k1 = KindOfRoom(name='Phòng đơn')
     # k2 = KindOfRoom(name='Phòng đôi')
@@ -98,4 +118,10 @@ if __name__ == '__main__':
     #               description=r['description'], kind_id=r['kind_id'])
     #     db.session.add(ro)
     #
+    # db.session.commit()
+
+    # r = Room(name='phong mot giuong vip',
+    #          description='Wifi miễn phí1 giường nhỏDiện tích phòng: 32 m²Hướng phòng: Thành phốPhòng tắm vòi sen & bồn tắm',
+    #          price='1000000', image="images/p1.png", kind_id='1')
+    # db.session.add(r)
     # db.session.commit()
