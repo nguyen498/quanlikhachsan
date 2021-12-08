@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for
-from hotelapp import app
-import utils
+from hotelapp import app, utils
+
 
 
 @app.route("/")
