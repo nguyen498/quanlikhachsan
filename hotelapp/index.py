@@ -3,7 +3,6 @@ from hotelapp import app, utils
 from hotelapp.admin import *
 from hotelapp import login_manager
 from flask_login import current_user, login_user, logout_user
-
 from hotelapp.models import UserRole
 
 # You will need to provide a user_loader callback. 
