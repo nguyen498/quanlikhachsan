@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, Float, String, Boolean, Enum, DateTime, 
 from sqlalchemy.orm import relationship
 from hotelapp import db
 from enum import Enum as UserEnum
-
+from flask_login import UserMixin
 
 class BaseModel(db.Model):
     __abstract__ = True
@@ -16,7 +16,7 @@ class UserRole(UserEnum):
     USER = 2
 
 
-class User(BaseModel):
+class User(BaseModel, UserMixin):
     name = Column(String(50), nullable=False)
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
@@ -55,21 +55,19 @@ class Room(BaseModel):
 
 
 if __name__ == '__main__':
-   db.create_all()
+    db.create_all()
 
     # k1 = KindOfRoom(name='Phòng đơn')
     # k2 = KindOfRoom(name='Phòng đôi')
     # k3 = KindOfRoom(name='Phòng ba')
     # k4 = KindOfRoom(name='Phòng gia đình')
     # k5 = KindOfRoom(name='Homestay')
-    #
+    
     # db.session.add(k1)
     # db.session.add(k2)
     # db.session.add(k3)
     # db.session.add(k4)
     # db.session.add(k5)
-    #
-    # db.session.commit()
 
     # room = [{
     #     "id": 1,
@@ -112,12 +110,12 @@ if __name__ == '__main__':
     #     "quantity": 8,
     #     "kind_id": 5
     # }]
-    #
+    
     # for r in room:
     #     ro = Room(name=r['name'], price=r['price'], image=r['image'], quantity=r['quantity'],
     #               description=r['description'], kind_id=r['kind_id'])
     #     db.session.add(ro)
-    #
+    
     # db.session.commit()
 
     # r = Room(name='phong mot giuong vip',
