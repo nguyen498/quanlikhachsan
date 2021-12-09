@@ -4,7 +4,6 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from flask_login.utils import logout_user
 from werkzeug.utils import redirect
-
 from hotelapp import app, db, utils
 from hotelapp.models import KindOfRoom, Room, User, UserRole
 
@@ -12,10 +11,10 @@ from hotelapp.models import KindOfRoom, Room, User, UserRole
 class AdminHomeView(AdminIndexView):
     @expose('/')
     def home(self):
-        # cate_stats = utils.cate_stats2()
+        kind_stats = utils.kind_stats()
         return self.render(
             'admin/pages/index.html', 
-            # cate_stats=cate_stats
+            kind_stats=kind_stats, msg="Hello"
         )
 
 

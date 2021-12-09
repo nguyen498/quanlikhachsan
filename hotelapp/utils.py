@@ -1,5 +1,6 @@
 from hotelapp import app, db
 from hotelapp.models import KindOfRoom, Room, User, UserRole
+from sqlalchemy import  func
 import hashlib
 
 
@@ -54,3 +55,10 @@ def check_login(username, password, role=UserRole.USER):
             User.username.__eq__(username.strip()),
             User.password.__eq__(password)
         ).first()
+
+
+#Lay du lieu thong ke
+def kind_stats():
+    return db.session.query(KindOfRoom.id, KindOfRoom.name, func.count(Room.id))\
+                     .join(Room, KindOfRoom.id.__eq__(Room.kind_id))\
+                     .group_by(KindOfRoom.id, KindOfRoom.name).all()
