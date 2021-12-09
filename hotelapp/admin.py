@@ -1,4 +1,4 @@
-from flask_admin import Admin, AdminIndexView
+from flask_admin import AdminIndexView
 from flask_admin.base import Admin, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
@@ -48,6 +48,7 @@ class LogoutView(BaseView):
 
     def is_accessible(self):
         return current_user.is_authenticated
+
 
 # kiểm tra admin
 class AdminAutheticatedView(ModelView):

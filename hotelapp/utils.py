@@ -7,13 +7,35 @@ def load_kindofroom():
     return KindOfRoom.query.all()
 
 
-def load_room():
-    return Room.query.all()
+def load_room(kind_id=None, kw=None, from_price=None, to_price=None, page=1):
+    rooms = Room.query.filter(Room.active.__eq__(True))
+
+    if kind_id:
+        rooms = rooms.filter(Room.category_id.__eq__(kind_id))
+
+    if kw:
+        rooms = rooms.filter(Room.name.contains(kw))
+
+    if from_price:
+        rooms = rooms.filter(Room.price.__ge__(from_price))
+
+    if to_price:
+        rooms = rooms.filter(Room.price.__le__(to_price))
+
+    page_size = app.config['PAGE_SIZE']
+    start = (page - 1) * page_size
+
+    return rooms.slice(start, start + page_size).all()
+
+
+def count_products():
+    return Room.query.filter(Room.active.__eq__(True)).count()
 
 
 def add_user(name, username, password, **kwargs):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
-    user = User(name=name, username=username, password=password,
+    user = User(name=name, username=username,
+                password=password,
                 email=kwargs.get('email'))
 
     db.session.add(user)

@@ -4,7 +4,13 @@
 
 {% block body %}
 
-<h1 class="subject">{{ s }}</h1>
+<h1 class="subject text-center">{{ s }}</h1>
+
+ <form class="form-inline">
+      <input class="form-control mb-2 mr-sm-2" type="number" name="from_price" placeholder="Nhap gia bat dau..." />
+      <input class="form-control mb-2 mr-sm-2" type="number" name="to_price" placeholder="Nhap gia ket thuc..." />
+      <input class="form-group btn btn-success mb-2" type="submit" value="Tim" />
+ </form>
 
 {% if room %}
 <div class="row">
@@ -22,6 +28,15 @@
     </div>
     {% endfor %}
 </div>
+
+{% if pages > 1 %}
+<ul class="pagination">
+    {% for idx in range(1, pages + 1) %}
+    <li class="page-item"><a class="page-link" href="{{ url_for('home', page=idx) }}">{{ idx }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 {% else %}
 <p><i>Khong co san pham nao!!!</i></p>
 {% endif %}
