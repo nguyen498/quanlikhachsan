@@ -4,35 +4,154 @@
 
 {% block body %}
 
-<h1 class="text-center text-danger">Dang Ky</h1>
+<style>
 
+    html,
+    body,
+    .view {
+      height: 100%;
+    }
+
+    @media (min-width: 851px) and (max-width: 1440px) {
+      html,
+      body,
+      .view {
+        height: 850px;
+      }
+    }
+
+    @media (min-width: 800px) and (max-width: 850px) {
+      html,
+      body,
+      .view {
+        height: 1000px;
+      }
+    }
+
+    @media (min-width: 451px) and (max-width: 740px) {
+      html,
+      body,
+      .view {
+        height: 1200px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      html,
+      body,
+      header,
+      .view {
+        height: 1400px;
+      }
+    }
+
+    .intro-2 {
+      background: url("https://mdbootstrap.com/img/Photos/Others/forest1.jpg")no-repeat center center;
+      background-size: cover;
+    }
+
+    .top-nav-collapse {
+      background-color: #3f51b5 !important;
+    }
+
+    .navbar:not(.top-nav-collapse) {
+      background: transparent !important;
+    }
+
+    @media (max-width: 768px) {
+      .navbar:not(.top-nav-collapse) {
+        background: #3f51b5 !important;
+      }
+    }
+    @media (min-width: 800px) and (max-width: 850px) {
+        .navbar:not(.top-nav-collapse) {
+            background: #3f51b5!important;
+        }
+    }
+
+    .rgba-gradient {
+      background: -webkit-linear-gradient(98deg, rgba(22, 91, 231, 0.5), rgba(255, 32, 32, 0.5) 100%);
+      background: -webkit-gradient(linear, 98deg, from(rgba(22, 91, 231, 0.5)), to(rgba(255, 32, 32, 0.5)));
+      background: linear-gradient(to 98deg, rgba(22, 91, 231, 0.5), rgba(255, 32, 32, 0.5) 100%);
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.85);
+    }
+
+    h6 {
+      line-height: 1.7;
+    }
+</style>
 {% if error_msg %}
 <div class="alert alert-danger"><h4>{{error_msg}}</h4></div>
 {% endif %}
 
-<form method="post" action="{{ url_for('user_register') }}">
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" class="form-control" placeholder="Enter name" id="name" name="name" required >
+<!--Intro Section-->
+<section class="view intro-2">
+    <div class="mask rgba-gradient">
+      <div class="container h-100 d-flex justify-content-center align-items-center">
+
+        <!--Grid row-->
+        <div class="row  pt-5 mt-3">
+
+          <!--Grid column-->
+          <div class="col-md-12">
+
+            <div class="card">
+              <div class="card-body">
+
+                <h2 class="font-weight-bold my-4 text-center mb-5 mt-4 font-weight-bold">
+                  <strong>REGISTER</strong>
+                </h2>
+
+                <!--Grid row-->
+                <div class="row mt-5" style="min-width: 400px;">
+
+
+                  <!--Grid column-->
+                  <form class="col-11 mx-auto">
+
+                    <!--Body-->
+                    <div class="md-form">
+                      <i class="fas fa-user prefix"></i>
+                      <input type="text" id="orangeForm-name" class="form-control">
+                      <label for="orangeForm-name">Your name</label>
+                    </div>
+                    <div class="md-form">
+                      <i class="fas fa-envelope prefix"></i>
+                      <input type="text" id="orangeForm-email" class="form-control">
+                      <label for="orangeForm-email">Your email</label>
+                    </div>
+
+                    <div class="md-form">
+                      <i class="fas fa-lock prefix"></i>
+                      <input type="password" id="orangeForm-pass" class="form-control">
+                      <label for="orangeForm-pass">Your password</label>
+                    </div>
+
+                    <div class="text-center">
+                      <button class="btn btn-indigo btn-rounded mt-5">Sign up</button>
+                    </div>
+
+                  </form>
+                  <!--Grid column-->
+
+                </div>
+                <!--Grid row-->
+
+              </div>
+            </div>
+
+          </div>
+          <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+
+      </div>
     </div>
-    <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" class="form-control" placeholder="Enter username" id="username" name="username" required >
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" class="form-control" placeholder="Enter email" id="email" name="email" >
-    </div>
-    <div class="form-group">
-        <label for="pass">Password:</label>
-        <input type="password" class="form-control" placeholder="Enter password" id="pass" name="password" required>
-    </div>
-       <div class="form-group">
-        <label for="confirm">Confirm password:</label>
-        <input type="password" class="form-control" placeholder="Confirm password" id="confirm" name="confirm" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-<br>
+  </section>
+  <!--Intro Section-->
 
 {% endblock %}

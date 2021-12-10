@@ -1,3 +1,9 @@
 .card-img-top{
     height: 150px
 }
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+/* .navbar .dropdown-menu:hover {
+    position: relative !important;
+} */
