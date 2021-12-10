@@ -3,38 +3,93 @@
 {% block body %}
 
 <section class="register container mt-4" id="register" style="min-height: 300px;">
-    
-    {% include './admin/layout/error_msg.html' %}
-    
-    
+
+{% include './admin/layout/error_msg.html' %}
+
     {% if current_user.is_authenticated %}
-    <h1> Welcome {{ current_user.name }} </h1>
-    <table class="table mt-4">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Count</th>
-                <!-- <th scope="col">Category</th> -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for cate_stat in cate_stats %}
-            <tr>
-                <th scope="row">{{ cate_stat[0] }}</th>
-                <td>{{ cate_stat[1] }}</td>
-                <td>{{ cate_stat[2] }}</td>
-                <!-- <td>@mdo</td> -->
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <h1 class="text-center" > Welcome <span class="text-danger">{{ current_user.name }}</span> to administrator website </h1>
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Count</th>
+                        <!-- <th scope="col">Category</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kt in kind_stats %}
+                    <tr>
+                        <th scope="row">{{ kt[0] }}</th>
+                        <td>{{ kt[1] }}</td>
+                        <td>{{ kt[2] }}</td>
+                        <!-- <td>@mdo</td> -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <section class="chart container col-md-6 col-xs-12" id="chart">
+            <canvas id="myChart"></canvas>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+    let labels=[], info=[];
+    {% for kt in kind_stats %}
+        labels.push('{{ kt[1] }}')
+        info.push('{{ kt[2] }}')
+    {% endfor %}
+
+    window.onload = function(){
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Thong ke so phong',
+                    data: info,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+    </script>
 
     {% else %}
     <h1 class="text-center">LOG IN</h1>
     <form method="post" action="{{ url_for('admin_login') }}">
         <div class="form-group">
-            <label for="name">UserName:</label>
+            <label for="username">UserName:</label>
             <input name="username" type="text" class="form-control" id="username">
         </div>
         <div class="form-group">
@@ -49,15 +104,5 @@
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
     {% endif %}
-
-    
 </section>
-
-<section class="chart container mb-4" id="chart">
-
-    <canvas id="myChart" width="400" height="400"></canvas>
-
-</section>
-
-
 {% endblock %}

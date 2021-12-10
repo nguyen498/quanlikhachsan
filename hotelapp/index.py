@@ -1,13 +1,15 @@
+import math
+
 from flask import render_template, request, redirect, url_for
 from hotelapp import app, utils
-from hotelapp.admin import *
 from hotelapp import login_manager
 from flask_login import current_user, login_user, logout_user
 from hotelapp.models import UserRole
 
-# You will need to provide a user_loader callback. 
+
+# You will need to provide a user_loader callback.
 # This callback is used to reload the user object from the user ID stored in the session
-@login_manager.user_loader    
+@login_manager.user_loader
 def inject_user(user_id):
     return utils.get_user_by_id(user_id=user_id)
 
@@ -25,13 +27,20 @@ def admin_login():
     return redirect('/admin')
 
 
-
 # Client
 @app.route("/")
 def home():
+    kind_id = request.args.get("kind_id")
+    kw = request.args.get("keyword")
+    from_price = request.args.get("from_price")
+    to_price = request.args.get("to_price")
+    page = request.args.get('page', 1)
+
     s = "Wellcome to my website"
-    room = utils.load_room()
-    return render_template('/client/pages/index.html', s=s, room=room)
+    room = utils.load_room(kind_id=kind_id, kw=kw, from_price=from_price,
+                           to_price=to_price, page=int(page))
+    return render_template('/client/pages/index.html', s=s, room=room,
+                           pages=math.ceil(utils.count_products()/app.config['PAGE_SIZE']))
 
 
 @app.route('/register', methods=['get', 'post'])
@@ -64,3 +73,7 @@ def common_response():
     }
 
 
+if __name__ == "__main__":
+    from hotelapp.admin import *
+
+    app.run(debug=True)
