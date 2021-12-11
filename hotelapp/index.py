@@ -35,13 +35,11 @@ def home():
     from_price = request.args.get("from_price")
     to_price = request.args.get("to_price")
     page = request.args.get('page', 1)
-
     s = "Wellcome to my website"
     room = utils.load_room(kind_id=kind_id, kw=kw, from_price=from_price,
                            to_price=to_price, page=int(page))
     return render_template('/client/pages/index.html', s=s, room=room,
                            pages=math.ceil(utils.count_products()/app.config['PAGE_SIZE']))
-
 
 
 # Client

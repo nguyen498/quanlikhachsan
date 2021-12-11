@@ -4,7 +4,9 @@
 
 
 {% block title %} Trang chu {% endblock %}
-
+{% block scripts %}
+ <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock scripts %}
 {% block intro %}
 <!-- Intro Section -->
 <div id="home" class="view jarallax" data-jarallax='{"speed": 0.2}' max-height="700px"
@@ -360,19 +362,27 @@
   </div>
 
   <!--Third container-->
-  <div class="container">
+  <div class="container" >
 
     <!--Section: Offers-->
     <section id="offers" class="pt-2 mt-3 pb-3">
 
       <h5 class="text-center dark-grey-text text-uppercase font-weight-bold spacing my-5 pt-2 pb-4 wow fadeIn"
         data-wow-delay="0.2s">
-        <strong>top offers</strong>
+        <strong id="test">top offers</strong>
       </h5>
-
+      {% if room %}
+      {% if pages > 1 %}
+      <ul class="pagination">
+        {% for idx in range(1, pages + 1) %}
+        <li class="page-item"><a class="page-link btn btn-info btn-sm font-weight-bold card " href="{{ url_for('home', page=idx) }}#test">{{ idx }}</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endif %}
       <!-- Grid row -->
       <div class="row">
-
+        {% for r in room %}
         <!-- Grid column -->
         <div class="col-md-6 col-lg-4">
 
@@ -381,8 +391,8 @@
 
             <!--Card image-->
             <div class="view overlay">
-              <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/images/26.jpg"
-                alt="Card image cap">
+              <img class="card-img-top" src="{{ url_for('static', filename=r.image)}}"
+                alt={{ r.name }}>
               <a href="#!">
                 <div class="mask rgba-white-slight"></div>
               </a>
@@ -394,18 +404,19 @@
               <!--Title-->
               <a>
                 <h5 class="font-weight-bold text-uppercase">
-                  <strong>ROOM WITH OCEAN VIEW</strong>
+                  <strong>{{ r.name }}</strong>
                 </h5>
               </a>
               <a>
-                <span class="badge badge-info py-2 px-2">$ 250</span>
+                <span class="badge badge-info py-2 px-2">{{ "{:,.1f}".format(r.price) }} VND/Đêm</span>
               </a>
 
               <!--Text-->
-              <p class="grey-text mt-2">Some quick example text to build on the card title and make up the bulk of the
-                card's content.
+              {% for x in r.description.split('!') %}
+              <p class="grey-text mt-2" style="margin: 0px 10px">{{ x }}</p>
+              {% endfor %}
                 <!--Grid row-->
-                <div class="row">
+                <div class="row" style="margin-top: 10px">
 
                   <!--Grid column-->
                   <div class="col-lg-4 col-md-12 text-center">
@@ -427,15 +438,14 @@
                       <i class="fas fa-wifi dark-grey-text" aria-hidden="true"></i> Wi-Fi</p>
                   </div>
                   <!--Grid column-->
-
                 </div>
                 <!--Grid row-->
-              </p>
+
               <hr>
               <!--Grid column-->
               <div class="col-12 text-center">
                 <button class="btn btn-info btn-sm font-weight-bold btn-rounded">
-                  <strong>Book a room</strong>
+                  <strong>Xem chi tiết</strong>
                 </button>
               </div>
               <!--Grid column-->
@@ -448,159 +458,7 @@
 
         </div>
         <!-- Grid column -->
-
-        <!-- Grid column -->
-        <div class="col-md-6 col-lg-4">
-
-          <!--Card-->
-          <div class="card card-personal mb-4">
-
-            <!--Card image-->
-            <div class="view overlay">
-              <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/images/21.jpg"
-                alt="Card image cap">
-              <a href="#!">
-                <div class="mask rgba-white-slight"></div>
-              </a>
-            </div>
-            <!--Card image-->
-
-            <!--Card content-->
-            <div class="card-body">
-              <!--Title-->
-              <a>
-                <h5 class="font-weight-bold text-uppercase">
-                  <strong>EXCLUSIVE APARTMENT</strong>
-                </h5>
-              </a>
-              <a>
-                <span class="badge badge-info py-2 px-2">$ 150</span>
-              </a>
-
-              <!--Text-->
-              <p class="grey-text mt-2">Some quick example text to build on the card title and make up the bulk of the
-                card's content.
-                <!--Grid row-->
-                <div class="row">
-
-                  <!--Grid column-->
-                  <div class="col-lg-4 col-md-12 text-center">
-                    <p class="dark-grey-text">
-                      <i class="fas fa-hotel dark-grey-text" aria-hidden="true"></i> 1 bed</p>
-                  </div>
-                  <!--Grid column-->
-
-                  <!--Grid column-->
-                  <div class="col-lg-4 col-md-12 text-center">
-                    <p class="dark-grey-text">
-                      <i class="fas fa-utensils dark-grey-text" aria-hidden="true"></i> Launches</p>
-                  </div>
-                  <!--Grid column-->
-
-                  <!--Grid column-->
-                  <div class="col-lg-4 col-md-12 text-center">
-                    <p class="dark-grey-text">
-                      <i class="fas fa-wifi dark-grey-text" aria-hidden="true"></i> Wi-Fi</p>
-                  </div>
-                  <!--Grid column-->
-
-                </div>
-                <!--Grid row-->
-              </p>
-              <hr>
-              <!--Grid column-->
-              <div class="col-12 text-center">
-                <button class="btn btn-info btn-sm font-weight-bold btn-rounded">
-                  <strong>Book a room</strong>
-                </button>
-              </div>
-              <!--Grid column-->
-
-            </div>
-            <!--Card content-->
-
-          </div>
-          <!--Card-->
-
-        </div>
-        <!-- Grid column -->
-
-        <!-- Grid column -->
-        <div class="col-md-12 col-lg-4">
-
-          <!--Card-->
-          <div class="card card-personal mb-4">
-
-            <!--Card image-->
-            <div class="view overlay">
-              <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/images/25.jpg"
-                alt="Card image cap">
-              <a href="#!">
-                <div class="mask rgba-white-slight"></div>
-              </a>
-            </div>
-            <!--Card image-->
-
-            <!--Card content-->
-            <div class="card-body">
-              <!--Title-->
-              <a>
-                <h5 class="font-weight-bold text-uppercase">
-                  <strong>ROOM WITH TERRACE</strong>
-                </h5>
-              </a>
-              <a>
-                <span class="badge badge-info py-2 px-2">$ 350</span>
-              </a>
-
-              <!--Text-->
-              <p class="grey-text mt-2">Some quick example text to build on the card title and make up the bulk of the
-                card's content.
-                <!--Grid row-->
-                <div class="row">
-
-                  <!--Grid column-->
-                  <div class="col-lg-4 col-md-4 text-center">
-                    <p class="dark-grey-text">
-                      <i class="fas fa-hotel dark-grey-text" aria-hidden="true"></i> 3 beds</p>
-                  </div>
-                  <!--Grid column-->
-
-                  <!--Grid column-->
-                  <div class="col-lg-4 col-md-4 text-center">
-                    <p class="dark-grey-text">
-                      <i class="fas fa-utensils dark-grey-text" aria-hidden="true"></i> Launches</p>
-                  </div>
-                  <!--Grid column-->
-
-                  <!--Grid column-->
-                  <div class="col-lg-4 col-md-4 text-center">
-                    <p class="dark-grey-text">
-                      <i class="fas fa-wifi dark-grey-text" aria-hidden="true"></i> Wi-Fi</p>
-                  </div>
-                  <!--Grid column-->
-
-                </div>
-                <!--Grid row-->
-              </p>
-              <hr>
-              <!--Grid column-->
-              <div class="col-12 text-center">
-                <button class="btn btn-info btn-sm font-weight-bold btn-rounded">
-                  <strong>Book a room</strong>
-                </button>
-              </div>
-              <!--Grid column-->
-
-            </div>
-            <!--Card content-->
-
-          </div>
-          <!--Card-->
-
-        </div>
-        <!-- Grid column -->
-
+        {% endfor %}
       </div>
       <!-- Grid row -->
 

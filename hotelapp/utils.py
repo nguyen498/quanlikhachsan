@@ -23,6 +23,7 @@ def load_room(kind_id=None, kw=None, from_price=None, to_price=None, page=1):
     if to_price:
         rooms = rooms.filter(Room.price.__le__(to_price))
 
+
     page_size = app.config['PAGE_SIZE']
     start = (page - 1) * page_size
 
