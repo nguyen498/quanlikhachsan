@@ -12,38 +12,37 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500,700&amp;display=swap">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!-- Font awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <!-- Material Design Bootstrap -->
+    <link href="{{ url_for('static', filename='css/mdb.min.css') }}" rel="stylesheet">
     <!-- main css -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
-    <!-- Material Design Bootstrap -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/mdb.lite.min.css') }}">
-    <!-- Material Design Bootstrap Ecommerce -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/mdb.ecommerce.min.css') }}">
     
 </head>
 
-<body class="skin-light" aria-busy="true" cz-shortcut-listen="true">
-    <header class="header" id="header">
-        {% include './client/layout/navbar.html' %}
-        
-        {% block jumbotron %}{% endblock jumbotron %}
-    </header>
+<body class="hostel-lp">
+    
+    {% include './client/layout/header.html' %}
+    {% block intro %}{% endblock intro %}
+    
+    {% block body %}{% endblock body %}
+    
 
-    <main class="main container" id="main">
-        {% block body %}{% endblock body %}
-    </main>
-
-    <footer class="page-footer font-small elegant-color" id="footer">
-        {% include './client/layout/footer.html' %}
-    </footer>
+    {% include './client/layout/footer.html' %}
+    
 
     <!-- scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/mdb.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/mdb.min.js') }}"></script>
+    <!-- Custom scripts -->
+    <script>
+        // Animation init
+        new WOW().init();
+    </script>
     {% block scripts %}{% endblock scripts %}
 </body>
 </html>
