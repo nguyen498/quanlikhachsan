@@ -12,7 +12,7 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav mr-auto smooth-scroll">
           <li class="nav-item">
-            <a class="nav-link" href="#home">Home
+            <a class="nav-link" href="{{ url_for('home') }}">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -39,19 +39,39 @@
           </li>
         </ul>
         <!-- Social Icon  -->
-        <ul class="navbar-nav nav-flex-icons">
-          <li class="nav-item d-flex align-items-center mr-2">
-            <a href="{{ url_for('user_login') }}" class="nav-link waves-effect">
-              Log In
-          </a>
-          </li>
+        {% if current_user.is_authenticated %}
+        <div>
+          <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item d-flex align-items-center mr-2">
+              <a href="#" class="nav-link waves-effect">
+                {{current_user.name}}
+              </a>
+            </li>
           <li class="nav-item">
-            <a style="color: white !important;"
-            href="{{ url_for('user_register') }}" type="button"
-              class="btn btn-outline-info btn-md btn-rounded btn-navbar waves-effect waves-light">
-              Sign Up</a>
+                <a style="color: white !important;"
+                  href="{{ url_for('logout') }}" type="button"
+                  class="btn btn-outline-info btn-md btn-rounded btn-navbar waves-effect waves-light">
+                  Log Out</a>
           </li>
-        </ul>
+          </ul>
+        </div>
+        {% else %}
+        <div>
+          <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item d-flex align-items-center mr-2">
+              <a href="{{ url_for('user_login') }}" class="nav-link waves-effect">
+                Log In
+            </a>
+            </li>
+            <li class="nav-item">
+              <a style="color: white !important;"
+                href="{{ url_for('user_register') }}" type="button"
+                class="btn btn-outline-info btn-md btn-rounded btn-navbar waves-effect waves-light">
+                Sign Up</a>
+            </li>
+          </ul>
+          </div>
+        {% endif %}
       </div>
     </div>
   </nav>

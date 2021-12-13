@@ -83,9 +83,7 @@
       line-height: 1.7;
     }
 </style>
-{% if error_msg %}
-<div class="alert alert-danger"><h4>{{error_msg}}</h4></div>
-{% endif %}
+
 
 <!--Intro Section-->
 <section class="view intro-2">
@@ -104,34 +102,45 @@
                 <h2 class="font-weight-bold my-4 text-center mb-5 mt-4 font-weight-bold">
                   <strong>REGISTER</strong>
                 </h2>
+                {% if error_msg %}
+                    <div class="alert alert-danger"><h4>{{error_msg}}</h4></div>
+                {% endif %}
 
                 <!--Grid row-->
                 <div class="row mt-5" style="min-width: 400px;">
 
-
                   <!--Grid column-->
-                  <form class="col-11 mx-auto">
+                  <form class="col-11 mx-auto" action="{{ url_for('user_register') }}" method="post">
 
                     <!--Body-->
                     <div class="md-form">
                       <i class="fas fa-user prefix"></i>
-                      <input type="text" id="orangeForm-name" class="form-control">
+                      <input type="text" id="orangeForm-name" class="form-control" name="name" required>
                       <label for="orangeForm-name">Your name</label>
                     </div>
                     <div class="md-form">
+                      <i class="fas fa-user-circle prefix" ></i>
+                      <input type="text" id="orangeForm-username" class="form-control" name="username" required>
+                      <label for="orangeForm-username">Username</label>
+                    </div>
+                    <div class="md-form">
                       <i class="fas fa-envelope prefix"></i>
-                      <input type="text" id="orangeForm-email" class="form-control">
+                      <input type="text" id="orangeForm-email" class="form-control" name="email">
                       <label for="orangeForm-email">Your email</label>
                     </div>
-
                     <div class="md-form">
                       <i class="fas fa-lock prefix"></i>
-                      <input type="password" id="orangeForm-pass" class="form-control">
+                      <input type="password" id="orangeForm-pass" class="form-control" name="password" required>
                       <label for="orangeForm-pass">Your password</label>
+                    </div>
+                    <div class="md-form">
+                      <i class="fas fa-lock prefix"></i>
+                      <input type="password" id="orangeForm-confirm" class="form-control" name="confirm" required>
+                      <label for="orangeForm-confirm">Confirm password</label>
                     </div>
 
                     <div class="text-center">
-                      <button class="btn btn-indigo btn-rounded mt-5">Sign up</button>
+                      <input type="submit" class="btn btn-indigo btn-rounded mt-5" value="Sign In"/>
                     </div>
 
                   </form>

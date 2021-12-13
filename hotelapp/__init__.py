@@ -1,5 +1,3 @@
-import sys
-
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -13,5 +11,3 @@ app.config['PAGE_SIZE'] = 3
 db = SQLAlchemy(app=app)
 
 login_manager = LoginManager(app)
-
-
