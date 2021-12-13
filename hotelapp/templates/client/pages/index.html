@@ -1,44 +1,479 @@
 {% extends 'base.html' %}
 
+
+
+
 {% block title %} Trang chu {% endblock %}
+{% block scripts %}
+ <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock scripts %}
+{% block intro %}
+<!-- Intro Section -->
+<div id="home" class="view jarallax" data-jarallax='{"speed": 0.2}' max-height="700px"
+  style="background-image: url('https://mdbootstrap.com/img/Photos/Horizontal/Nature/full page/img (29).jpg');">
+  <div class="mask  rgba-black-slight">
+    <div class="container h-100 d-flex justify-content-center align-items-center">
+      <div class="row smooth-scroll">
+        <div class="col-md-12 text-center white-text">
+          <div class="wow fadeInDown" data-wow-delay="0.2s">
+            <h1 class="white-text display-4 font-weight-bold mt-5 mt-xl-2">
+              <em>Welcome to our
+                <strong>Hotel</strong>
+              </em>
+            </h1>
+
+            <!--Rating-->
+            <ul class="rating mt-3">
+              <li>
+                <i class="fas fa-star"></i>
+              </li>
+              <li>
+                <i class="fas fa-star"></i>
+              </li>
+              <li>
+                <i class="fas fa-star"></i>
+              </li>
+              <li>
+                <i class="fas fa-star"></i>
+              </li>
+              <li>
+                <i class="fas fa-star"></i>
+              </li>
+            </ul>
+
+            <h4 class="text-uppercase white-text mb-5 mt-3 font-weight-bold spacing">Feel like at home</h4>
+
+            <a href="#rooms" class="btn btn-white dark-grey-text font-weight-bold btn-rounded spacing"
+              data-offset="100">
+              <strong>reservation</strong>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Intro Section -->
+{% endblock %}
+
 
 {% block body %}
 
-<h1 class="subject text-center">{{ s }}</h1>
+<!--Main layout-->
+<main>
 
- <form class="form-inline">
-      <input class="form-control mb-2 mr-sm-2" type="number" name="from_price" placeholder="Nhap gia bat dau..." />
-      <input class="form-control mb-2 mr-sm-2" type="number" name="to_price" placeholder="Nhap gia ket thuc..." />
-      <input class="form-group btn btn-success mb-2" type="submit" value="Tim" />
- </form>
+  <!--First container-->
+  <div class="container">
 
-{% if room %}
-<div class="row">
-    {% for r in room %}
-    <div class="col-md-3 col-xs-12" style="padding:5px">
-        <div class="card" style="padding:5px">
-          <img class="card-img-top"  src="{{ url_for('static', filename=r.image) }}" alt="{{ r.name }}">
-          <div class="card-body">
-            <h4 class="card-title">{{ r.name }}</h4>
-              <p class="card-text">{{ r.description }} </p>
-              <p class="card-text text-danger">{{ "{:,.1f}".format(r.price) }} VND/Đêm</p>
-            <a href="#" class="btn btn-primary">Đặt phòng</a>
-          </div>
+    <!--Section: About-->
+    <section id="about" class="mt-5">
+
+      <!--Secion heading-->
+      <h5 class="text-center dark-grey-text text-uppercase font-weight-bold spacing my-5 py-4 wow fadeIn"
+        data-wow-delay="0.2s">
+        <strong>Giới thiệu</strong>
+      </h5>
+
+      <!--Grid row-->
+      <div class="row">
+
+        <!--Grid column-->
+        <div class="col-md-5">
+
+          <img src="https://mdbootstrap.com/img/Photos/Others/hotel1.jpg" class="img-fluid z-depth-1 rounded"
+            alt="sample image">
+
         </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-6 ml-lg-5 justify-content-left">
+          <hr class="line">
+
+          <h3 class="text-left dark-grey-text text-center font-weight-bold pb-4 wow fadeIn" data-wow-delay="0.2s">
+            <em>
+              <strong>Lorem ipsum dolor sit amet</strong>
+            </em>
+          </h3>
+
+          <p class="grey-text">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson
+            ad squid. 3
+            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
+            sapiente ea proident.
+          </p>
+          <p class="grey-text">Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea
+            proident.
+            Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic
+            synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          </p>
+          <h5 class="text-right dark-grey-text font-weight-bold mt-5 wow fadeIn" data-wow-delay="0.2s">
+            <em>
+              <strong>John Doe</strong>
+            </em>
+          </h5>
+          <p class="text-right grey-text wow fadeIn" data-wow-delay="0.2s">
+            <em>Director of the hotel</em>
+          </p>
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+    </section>
+    <!--/Section: About-->
+
+    <hr class="wow fadeIn mt-5" data-wow-delay="0.4s">
+
+    <!--Section: Rooms-->
+    <section id="room">
+
+      <!--Secion heading-->
+      <h5 class="text-center dark-grey-text text-uppercase font-weight-bold spacing my-5 py-4 wow fadeIn"
+        data-wow-delay="0.2s">
+        <strong>HOTEL MASTER'S ROOMS</strong>
+      </h5>
+
+      <!--Carousel Wrapper-->
+      <div id="multi-item-example" class="carousel slide carousel-multi-item" data-ride="carousel">
+
+        <!--Controls-->
+        <div class="controls-top">
+          <a class="mr-3" href="#multi-item-example" data-slide="prev">
+            <i class="fas fa-chevron-left info-text"></i>
+          </a>
+          <a class="ml-3" href="#multi-item-example" data-slide="next">
+            <i class="fas fa-chevron-right info-text"></i>
+          </a>
+        </div>
+        <!--/.Controls-->
+
+        <!--Slides-->
+        <div class="carousel-inner" role="listbox">
+
+          <!--First slide-->
+          <div class="carousel-item active">
+
+            <div class="col-md-4">
+
+              <img class="img-fluid rounded" src="https://mdbootstrap.com/img/Photos/Others/images/25.jpg"
+                alt="Card image cap">
+
+              <p class="text-uppercase font-weight-bold dark-grey-text spacing mt-3 mb-0">DELUXE ROOM with terrace</p>
+              <a>
+                <p class="info-text mt-1">
+                  <em>Check details</em>
+                </p>
+              </a>
+
+            </div>
+
+            <div class="col-md-4 clearfix d-none d-md-block">
+              <img class="img-fluid rounded" src="https://mdbootstrap.com/img/Photos/Others/images/27.jpg"
+                alt="Card image cap">
+
+              <p class="text-uppercase font-weight-bold dark-grey-text spacing mt-3 mb-0">room with swimming pool</p>
+              <a>
+                <p class="info-text mt-1">
+                  <em>Check details</em>
+                </p>
+              </a>
+
+            </div>
+
+            <div class="col-md-4 clearfix d-none d-md-block">
+              <img class="img-fluid rounded" src="https://mdbootstrap.com/img/Photos/Others/images/23.jpg"
+                alt="Card image cap">
+
+              <p class="text-uppercase font-weight-bold dark-grey-text spacing mt-3 mb-0">room with ocean view</p>
+              <a>
+                <p class="info-text mt-1">
+                  <em>Check details</em>
+                </p>
+              </a>
+
+            </div>
+
+          </div>
+          <!--/.First slide-->
+
+          <!--Second slide-->
+          <div class="carousel-item">
+
+            <div class="col-md-4">
+              <img class="img-fluid rounded" src="https://mdbootstrap.com/img/Photos/Others/images/26.jpg"
+                alt="Card image cap">
+
+              <p class="text-uppercase font-weight-bold dark-grey-text spacing mt-3 mb-0">ROOM with ocean view</p>
+              <a>
+                <p class="info-text mt-1">
+                  <em>Check details</em>
+                </p>
+              </a>
+
+            </div>
+
+            <div class="col-md-4 clearfix d-none d-md-block">
+              <img class="img-fluid rounded" src="https://mdbootstrap.com/img/Photos/Others/images/21.jpg"
+                alt="Card image cap">
+
+              <p class="text-uppercase font-weight-bold dark-grey-text spacing mt-3 mb-0">DELUXE ROOM – ONE KING BED
+              </p>
+              <a>
+                <p class="info-text mt-1">
+                  <em>Check details</em>
+                </p>
+              </a>
+
+            </div>
+
+            <div class="col-md-4 clearfix d-none d-md-block">
+              <img class="img-fluid rounded" src="https://mdbootstrap.com/img/Photos/Others/images/24.jpg"
+                alt="Card image cap">
+
+              <p class="text-uppercase font-weight-bold dark-grey-text spacing mt-3 mb-0">Room with exclusive pool</p>
+              <a>
+                <p class="info-text mt-1">
+                  <em>Check details</em>
+                </p>
+              </a>
+
+            </div>
+
+          </div>
+          <!--/.Second slide-->
+
+        </div>
+        <!--/.Slides-->
+
+      </div>
+      <!--/.Carousel Wrapper-->
+
+    </section>
+    <!--/Section: Rooms-->
+
+  </div>
+  <!--/First container-->
+
+  <!--Second container-->
+  <div class="container-fluid light-grey-background">
+    <div class="container py-4">
+
+      <!--Section: Facilities-->
+      <section id="facilities" class="mt-3 mb-3 pb-3">
+
+        <h5 class="text-center dark-grey-text text-uppercase font-weight-bold spacing my-5 pt-2 pb-4 wow fadeIn"
+          data-wow-delay="0.2s">
+          <strong>Facilities</strong>
+        </h5>
+
+        <!-- First row -->
+        <div class="row  wow fadeIn" data-wow-delay="0.4s">
+
+          <!-- First column -->
+          <div class="col-md-4 mb-4 text-center">
+
+            <!--Panel-->
+            <div class="card card-body rgba-white-light hoverable">
+              <i class="fas fa-utensils fa-2x mb-4 mt-3 dark-grey-text" aria-hidden="true"></i>
+              <p class="font-weight-bold font-weight-bold dark-grey-text text-uppercase spacing">
+                <strong>restaurant</strong>
+              </p>
+              <p class="dark-grey-text font-small">Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                nesciunt sapiente earu
+                proident. Ad vegan excepteur butcher vice lomo leggings occaecat.
+              </p>
+            </div>
+            <!--/.Panel-->
+
+          </div>
+          <!-- /First column -->
+
+          <!-- Second column -->
+          <div class="col-md-4 mb-4 text-center">
+
+            <!--Panel-->
+            <div class="card card-body rgba-white-light hoverable">
+              <i class="fas fa-wifi  fa-2x mb-4 mt-3 dark-grey-text" aria-hidden="true"></i>
+              <p class="font-weight-bold font-weight-bold dark-grey-text text-uppercase spacing">
+                <strong>free wi-fi</strong>
+              </p>
+              <p class="dark-grey-text font-small">Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                nesciunt sapiente earu
+                proident. Ad vegan excepteur butcher vice lomo leggings occaecat.
+              </p>
+            </div>
+            <!--/.Panel-->
+
+          </div>
+          <!-- /.Second column -->
+
+          <!-- Third column -->
+          <div class="col-md-4 mb-4 text-center">
+
+            <!--Panel-->
+            <div class="card card-body rgba-white-light hoverable">
+              <i class="fas fa-tint fa-2x mb-4 mt-3 dark-grey-text" aria-hidden="true"></i>
+              <p class="font-weight-bold font-weight-bold dark-grey-text text-uppercase spacing">
+                <strong>spa & pool</strong>
+              </p>
+              <p class="dark-grey-text font-small">Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                nesciunt sapiente earu
+                proident. Ad vegan excepteur butcher vice lomo leggings occaecat.
+              </p>
+            </div>
+            <!--/.Panel-->
+
+          </div>
+          <!-- /.Third column -->
+
+        </div>
+        <!-- /.First row -->
+
+      </section>
+      <!--/Section: Facilities-->
+
     </div>
-    {% endfor %}
-</div>
+  </div>
+  <!--Second container-->
 
-{% if pages > 1 %}
-<ul class="pagination">
-    {% for idx in range(1, pages + 1) %}
-    <li class="page-item"><a class="page-link" href="{{ url_for('home', page=idx) }}">{{ idx }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
+  <div class="streak streak-md streak-photo"
+    style="background-image:url('https://mdbootstrap.com/img/Photos/Horizontal/Nature/full page/img(27).jpg')">
+    <div class="flex-center white-text rgba-white-slight">
+      <ul class="list-unstyled mb-0">
+        <li>
+          <h1 class="h1-responsive font-weight-bold mb-4 spacing">
+            <em>Unforgettable
+              <strong>holidays</strong>
+            </em>
+          </h1>
+        </li>
+        <li class="mb-5">
+          <h6 class="text-center font-italic mb-0">Cruises | Scuba diving | Local travels</h6>
+        </li>
+        <button class="btn btn-white dark-grey-text font-weight-bold spacing btn-rounded">
+          <strong>Book a room</strong>
+        </button>
+      </ul>
+    </div>
+  </div>
 
-{% else %}
-<p><i>Khong co san pham nao!!!</i></p>
-{% endif %}
+  <!--Third container-->
+  <div class="container" >
+
+    <!--Section: Offers-->
+    <section id="offers" class="pt-2 mt-3 pb-3">
+
+      <h5 class="text-center dark-grey-text text-uppercase font-weight-bold spacing my-5 pt-2 pb-4 wow fadeIn"
+        data-wow-delay="0.2s">
+        <strong id="test">top offers</strong>
+      </h5>
+      {% if room %}
+      {% if pages > 1 %}
+      <ul class="pagination">
+        {% for idx in range(1, pages + 1) %}
+        <li class="page-item"><a class="page-link btn btn-info btn-sm font-weight-bold card " href="{{ url_for('home', page=idx) }}#test">{{ idx }}</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endif %}
+      <!-- Grid row -->
+      <div class="row">
+        {% for r in room %}
+        <!-- Grid column -->
+        <div class="col-md-6 col-lg-4">
+
+          <!--Card-->
+          <div class="card card-personal mb-4">
+
+            <!--Card image-->
+            <div class="view overlay">
+              <img class="card-img-top" src="{{ url_for('static', filename=r.image)}}"
+                alt={{ r.name }}>
+              <a href="#!">
+                <div class="mask rgba-white-slight"></div>
+              </a>
+            </div>
+            <!--Card image-->
+
+            <!--Card content-->
+            <div class="card-body">
+              <!--Title-->
+              <a>
+                <h5 class="font-weight-bold text-uppercase">
+                  <strong>{{ r.name }}</strong>
+                </h5>
+              </a>
+              <a>
+                <span class="badge badge-info py-2 px-2">{{ "{:,.1f}".format(r.price) }} VND/Đêm</span>
+              </a>
+
+              <!--Text-->
+              {% for x in r.description.split('!') %}
+              <p class="grey-text mt-2" style="margin: 0px 10px">{{ x }}</p>
+              {% endfor %}
+                <!--Grid row-->
+                <div class="row" style="margin-top: 10px">
+
+                  <!--Grid column-->
+                  <div class="col-lg-4 col-md-12 text-center">
+                    <p class="dark-grey-text">
+                      <i class="fas fa-hotel dark-grey-text" aria-hidden="true"></i> 3 beds</p>
+                  </div>
+                  <!--Grid column-->
+
+                  <!--Grid column-->
+                  <div class="col-lg-4 col-md-12 text-center">
+                    <p class="dark-grey-text">
+                      <i class="fas fa-utensils dark-grey-text" aria-hidden="true"></i> Launches</p>
+                  </div>
+                  <!--Grid column-->
+
+                  <!--Grid column-->
+                  <div class="col-lg-4 col-md-12 text-center">
+                    <p class="dark-grey-text">
+                      <i class="fas fa-wifi dark-grey-text" aria-hidden="true"></i> Wi-Fi</p>
+                  </div>
+                  <!--Grid column-->
+                </div>
+                <!--Grid row-->
+
+              <hr>
+              <!--Grid column-->
+              <div class="col-12 text-center">
+                <button class="btn btn-info btn-sm font-weight-bold btn-rounded">
+                  <strong>Xem chi tiết</strong>
+                </button>
+              </div>
+              <!--Grid column-->
+
+            </div>
+            <!--Card content-->
+
+          </div>
+          <!--Card-->
+
+        </div>
+        <!-- Grid column -->
+        {% endfor %}
+      </div>
+      <!-- Grid row -->
+
+    </section>
+    <!--Section: Offers-->
+
+    <hr class="wow fadeIn mt-5" data-wow-delay="0.4s">
+
+    
+
+
+  </div>
+  <!--/Third container-->
+
+</main>
+<!--/Main layout-->
 
 {% endblock %}
