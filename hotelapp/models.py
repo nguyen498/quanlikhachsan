@@ -62,13 +62,13 @@ if __name__ == '__main__':
     # k3 = KindOfRoom(name='Phòng ba')
     # k4 = KindOfRoom(name='Phòng gia đình')
     # k5 = KindOfRoom(name='Homestay')
-    
+    #
     # db.session.add(k1)
     # db.session.add(k2)
     # db.session.add(k3)
     # db.session.add(k4)
     # db.session.add(k5)
-
+    #
     # room = [{
     #     "id": 1,
     #     "name": "Deluxe giường đơn",
@@ -110,14 +110,14 @@ if __name__ == '__main__':
     #     "quantity": 8,
     #     "kind_id": 5
     # }]
-    
+    #
     # for r in room:
     #     ro = Room(name=r['name'], price=r['price'], image=r['image'], quantity=r['quantity'],
     #               description=r['description'], kind_id=r['kind_id'])
     #     db.session.add(ro)
-    
+    #
     # db.session.commit()
-
+    #
     # r = Room(name='phong mot giuong vip',
     #          description='Wifi miễn phí1 giường nhỏDiện tích phòng: 32 m²Hướng phòng: Thành phốPhòng tắm vòi sen & bồn tắm',
     #          price='1000000', image="images/p1.png", kind_id='1')
