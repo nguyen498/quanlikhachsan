@@ -4,6 +4,8 @@ from hotelapp import app, utils
 from hotelapp import login_manager
 from flask_login import current_user, login_user, logout_user
 from hotelapp.models import UserRole
+from hotelapp.admin import *
+
 # You will need to provide a user_loader callback.
 # This callback is used to reload the user object from the user ID stored in the session
 
@@ -35,6 +37,14 @@ def home():
     return render_template('/client/pages/index.html', s=s, room=room,
                            pages=math.ceil(utils.count_products()/app.config['PAGE_SIZE']))
 
+@app.route("/category")
+def category():
+    # get parameters
+    _id = int(request.args.get('category_id', 0))
+
+    return render_template('/client/pages/category.html',
+
+    )
 
 # Client
 @app.route("/login", methods=['get', 'post'])
