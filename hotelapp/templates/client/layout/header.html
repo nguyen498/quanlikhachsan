@@ -16,9 +16,17 @@
               <span class="sr-only">(current)</span>
             </a>
           </li>
+          {% if request.path == "/" %}
           <li class="nav-item">
             <a class="nav-link" href="#about" data-offset="100">About</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#facilities" data-offset="100">Facilities</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#offers" data-offset="100">Top offers</a>
+          </li>
+          {% endif %}
           <li class="nav-item dropdown">
               <!--Trigger-->
               <a class="nav-link dropdown-toggle">Loại Phòng</a>
@@ -29,13 +37,6 @@
                 <a class="dropdown-item" href="{{ url_for('category_detail', category_id=k.id)}}">{{ k.name }}</a>
                 {% endfor %}
               </div>
-          </li>
-          
-          <li class="nav-item">
-            <a class="nav-link" href="#facilities" data-offset="100">Facilities</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#offers" data-offset="100">Top offers</a>
           </li>
         </ul>
         <!-- Social Icon  -->

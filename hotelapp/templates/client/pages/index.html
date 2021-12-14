@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
 
-
-
 {% block title %} Trang chu {% endblock %}
 {% block scripts %}
  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
@@ -372,7 +370,7 @@
         <strong id="test">top offers</strong>
       </h5>
       <!-- Grid row -->
-      <div class="row">
+      <div class="row text-center">
         {% for r in room[:3] %}
         <!-- Grid column -->
         <div class="col-md-6 col-lg-4">
@@ -382,9 +380,10 @@
 
             <!--Card image-->
             <div class="view overlay">
-              <img class="card-img-top" src="{{ url_for('static', filename=r.image)}}"
-                alt={{ r.name }}>
-              <a href="#!">
+              <img class="image-fill-div-top card-img-top" 
+              src="{{ url_for('static', filename=r.image)}}"
+              alt="{{ r.name }}">
+              <a href="{{ url_for('room_detail', room_id= r.id) }}">
                 <div class="mask rgba-white-slight"></div>
               </a>
             </div>
@@ -394,7 +393,7 @@
             <div class="card-body">
               <!--Title-->
               <a>
-                <h5 class="font-weight-bold text-uppercase">
+                <h5 class="font-weight-bold text-uppercase pb-2">
                   <strong>{{ r.name }}</strong>
                 </h5>
               </a>
@@ -403,7 +402,7 @@
               </a>
 
               <!--Text-->
-              {% for x in r.description.split('!') %}
+              {% for x in r.description.split('.') %}
               <p class="grey-text mt-2" style="margin: 0px 10px">{{ x }}</p>
               {% endfor %}
                 <!--Grid row-->
@@ -435,9 +434,11 @@
               <hr>
               <!--Grid column-->
               <div class="col-12 text-center">
-                <button class="btn btn-info btn-sm font-weight-bold btn-rounded">
-                  <strong>Xem chi tiết</strong>
-                </button>
+                <a href="{{ url_for('room_detail', room_id= r.id) }}">
+                  <button class="btn btn-info btn-sm font-weight-bold btn-rounded">
+                    <strong>Xem chi tiết</strong>
+                  </button>
+                </a>
               </div>
               <!--Grid column-->
 
