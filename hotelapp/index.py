@@ -45,13 +45,17 @@ def category_detail(category_id):
     category = utils.get_category_by_id(category_id)
     page = request.args.get('page', 1)
     room = utils.get_room_by_category(category_id, page=int(page))
-    return render_template('/client/pages/category.html', category=category, room=room,
-                           pages=math.ceil(utils.count_room_in_category(category_id)/app.config['PAGE_SIZE']))
+    return render_template(
+        '/client/pages/category.html', 
+        title=category.name,
+        category=category, room=room,
+        pages=math.ceil(utils.count_room_in_category(category_id)/app.config['PAGE_SIZE'])
+    )
 
 
 
 @app.route("/room/<int:room_id>")
-def room(room_id):
+def room_detail(room_id):
     room = utils.get_room(id=room_id)
     return render_template(
         "./client/pages/hotel_details.html",

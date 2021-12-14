@@ -78,14 +78,16 @@
         <!-- Grid column -->
         <div class="col-lg-4 col-md-12 mb-5">
           <!-- Featured image -->
-          <div class="view overlay rounded z-depth-1 mb-2">
+          <a href="{{ url_for('room_detail', room_id= r.id) }}" class="view overlay rounded z-depth-1 mb-2" style="cursor: pointer;">
             <img src="{{ url_for('static', filename= r.image)}}" class="img-fluid image-cover" alt="First sample image">
             <a>
               <div class="mask rgba-white-slight waves-effect waves-light"></div>
             </a>
-          </div>
+          </a>
 
-          <h4 class="mb-2 mt-4 font-weight-bold">{{ r.name }}</h4>
+          <a href="{{ url_for('room_detail', room_id= r.id) }}" class="black-text">
+            <h4 class="mb-2 mt-4 font-weight-bold">{{ r.name }}</h4>
+          </a>
 
           <!-- Grid row -->
           <div class="row">
@@ -109,7 +111,7 @@
           {% for x in r.description.split('!') %}
           <p class="dark-grey-text">{{ x }}</p>
           {% endfor %}
-          <a class="text-uppercase font-small font-weight-bold spacing">Read more</a>
+          <a href="{{ url_for('room_detail', room_id= r.id) }}" class="text-uppercase font-small font-weight-bold spacing">Read more</a>
           <hr class="mt-1" style="max-width: 90px">
         </div>
         <!-- Grid column -->
