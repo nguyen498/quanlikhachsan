@@ -7,3 +7,6 @@
 /* .navbar .dropdown-menu:hover {
     position: relative !important;
 } */
+.background-black {
+    background-color: rgba(0,0,0,.6);
+  }

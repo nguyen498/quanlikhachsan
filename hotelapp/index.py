@@ -46,6 +46,16 @@ def category():
 
     )
 
+
+@app.route("/room/<int:room_id>")
+def room(room_id):
+    room = utils.get_room(id=room_id)
+    return render_template(
+        "./client/pages/hotel_details.html",
+        title=room.name,
+        room=room
+    )
+    
 # Client
 @app.route("/login", methods=['get', 'post'])
 def user_login():
