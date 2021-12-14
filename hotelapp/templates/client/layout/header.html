@@ -26,7 +26,7 @@
               <!--Menu-->
               <div class="dropdown-menu dropdown-primary position-no-important">
                 {% for k in kindofroom %}
-                <a class="dropdown-item" href="#">{{ k.name }}</a>
+                <a class="dropdown-item" href="{{ url_for('category_detail', category_id=k.id)}}">{{ k.name }}</a>
                 {% endfor %}
               </div>
           </li>
