@@ -8,7 +8,7 @@ def load_kindofroom():
     return KindOfRoom.query.all()
 
 
-def load_room(kind_id=None, kw=None, from_price=None, to_price=None, page=1):
+def load_room(kind_id=None, kw=None, from_price=None, to_price=None):
     rooms = Room.query.filter(Room.active.__eq__(True))
 
     if kind_id:
@@ -23,10 +23,7 @@ def load_room(kind_id=None, kw=None, from_price=None, to_price=None, page=1):
     if to_price:
         rooms = rooms.filter(Room.price.__le__(to_price))
 
-    page_size = app.config['PAGE_SIZE']
-    start = (page - 1) * page_size
-
-    return rooms.slice(start, start + page_size).all()
+    return rooms
 
 
 def count_products():
