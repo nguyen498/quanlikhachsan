@@ -64,55 +64,91 @@
 
     <div class="container">
 
-      <!-- Section heading -->
-      <h2 class="font-weight-bold my-5 text-center">Recent posts</h2>
+      <h2 class="font-weight-bold my-5 text-center">{{ category.name }}</h2>
 
-      <!-- Section description -->
-      <p class="grey-text w-responsive text-center mx-auto mb-5">Duis aute irure dolor in reprehenderit in voluptate
+      <!-- <p class="grey-text w-responsive text-center mx-auto mb-5">Duis aute irure dolor in reprehenderit in voluptate
         velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-        sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> -->
 
       <!-- Grid row -->
       <div class="row text-center mb-2">
         {% for r in room %}
         <!-- Grid column -->
-        <div class="col-lg-4 col-md-12 mb-5">
-          <!-- Featured image -->
-          <a href="{{ url_for('room_detail', room_id= r.id) }}" class="view overlay rounded z-depth-1 mb-2" style="cursor: pointer;">
-            <img src="{{ url_for('static', filename= r.image)}}" class="img-fluid image-cover" alt="First sample image">
-            <a>
-              <div class="mask rgba-white-slight waves-effect waves-light"></div>
-            </a>
-          </a>
+        <div class="col-md-6 col-lg-4">
 
-          <a href="{{ url_for('room_detail', room_id= r.id) }}" class="black-text">
-            <h4 class="mb-2 mt-4 font-weight-bold">{{ r.name }}</h4>
-          </a>
+          <!--Card-->
+          <div class="card card-personal mb-4">
 
-          <!-- Grid row -->
-          <div class="row">
-
-            <!-- Grid column -->
-            <div class="col-lg-6 col-md-6 text-lg-right ">
-              <p class="grey-text">
-                <i class="far fa-clock-o" aria-hidden="true"></i> July 5, 2017</p>
+            <!--Card image-->
+            <div class="view overlay">
+              <img class="image-fill-div-top card-img-top" 
+              src="{{ url_for('static', filename=r.image)}}"
+              alt="{{ r.name }}">
+              <a href="{{ url_for('room_detail', room_id= r.id) }}">
+                <div class="mask rgba-white-slight"></div>
+              </a>
             </div>
-            <!-- Grid column -->
+            <!--Card image-->
 
-            <!-- Grid column -->
-            <div class="col-lg-6 col-md-6 text-lg-left">
-              <p class="grey-text">
-                <i class="far fa-comment-dots" aria-hidden="true"></i> 6 Comments</p>
+            <!--Card content-->
+            <div class="card-body">
+              <!--Title-->
+              <a>
+                <h5 class="font-weight-bold text-uppercase pb-2">
+                  <strong>{{ r.name }}</strong>
+                </h5>
+              </a>
+              <a>
+                <span class="badge badge-info py-2 px-2">{{ "{:,.1f}".format(r.price) }} VNĐ/Ngày</span>
+              </a>
+
+              <!--Text-->
+              {% for x in r.description.split('.') %}
+              <p class="grey-text mt-2" style="margin: 0px 10px">{{ x }}</p>
+              {% endfor %}
+                <!--Grid row-->
+                <div class="row" style="margin-top: 10px">
+
+                  <!--Grid column-->
+                  <div class="col-lg-4 col-md-12 text-center">
+                    <p class="dark-grey-text">
+                      <i class="fas fa-hotel dark-grey-text" aria-hidden="true"></i> 3 beds</p>
+                  </div>
+                  <!--Grid column-->
+
+                  <!--Grid column-->
+                  <div class="col-lg-4 col-md-12 text-center">
+                    <p class="dark-grey-text">
+                      <i class="fas fa-utensils dark-grey-text" aria-hidden="true"></i> Launches</p>
+                  </div>
+                  <!--Grid column-->
+
+                  <!--Grid column-->
+                  <div class="col-lg-4 col-md-12 text-center">
+                    <p class="dark-grey-text">
+                      <i class="fas fa-wifi dark-grey-text" aria-hidden="true"></i> Wi-Fi</p>
+                  </div>
+                  <!--Grid column-->
+                </div>
+                <!--Grid row-->
+
+              <hr>
+              <!--Grid column-->
+              <div class="col-12 text-center">
+                <a href="{{ url_for('room_detail', room_id= r.id) }}">
+                  <button class="btn btn-info btn-sm font-weight-bold btn-rounded">
+                    <strong>Xem chi tiết</strong>
+                  </button>
+                </a>
+              </div>
+              <!--Grid column-->
+
             </div>
-            <!-- Grid column -->
+            <!--Card content-->
 
           </div>
-          <!-- Grid row -->
-          {% for x in r.description.split('!') %}
-          <p class="dark-grey-text">{{ x }}</p>
-          {% endfor %}
-          <a href="{{ url_for('room_detail', room_id= r.id) }}" class="text-uppercase font-small font-weight-bold spacing">Read more</a>
-          <hr class="mt-1" style="max-width: 90px">
+          <!--Card-->
+
         </div>
         <!-- Grid column -->
         {% endfor %}

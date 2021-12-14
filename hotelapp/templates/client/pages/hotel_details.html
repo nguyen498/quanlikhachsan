@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} Room Details {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
 {% block intro %}
 <style>
@@ -64,21 +64,42 @@
       
     <div class="row">
 
-      <div class="col-md-6">
-        <img class="image-cover img-fluid rounded-left" src="{{ url_for('static', filename=room.image)}}" alt="project image">
+      <div class="col-md-6  overlay hm-white-slight ">
+        
+      <div id="mdb-lightbox-ui"></div>
+
+      <div class="image-fill-div mdb-lightbox">
+
+        <figure class="image-fill-div item">
+          <a href="{{ url_for('static', filename=room.image)}}"
+            class="z-depth-1 rounded" data-size="1600x1067">
+            <img class="image-fill-div img-fluid rounded-left" src="{{ url_for('static', filename=room.image)}}" />
+          </a>
+        </figure>
       </div>
+      
+        <!-- <img 
+        src="{{ url_for('static', filename=room.image)}}"
+        alt="{{ room.name }}"
+        class="image-fill-div img-fluid rounded-left"
+        > -->
+        <a>
+          <div class="mask waves-effect waves-light"></div>
+        </a>
+      </div>
+     
 
       <div class="col-md-6 p-5 align-self-center">
 
-        <h2 class="font-weight-bold mb-4">{{ room.name }}</h2>
+        <h2 class="text-center font-weight-bold mb-4">{{ room.name }}</h2>
 
         <h3 class="h3-responsive text-center text-md-left mb-5 ml-xl-0 ml-4">
 
-          <span class="red-text font-weight-bold h5">
+          <div class="text-center red-text font-weight-bold h5">
 
             <strong>{{ "{:,.0f}".format(room.price) }} VNĐ/Ngày</strong>
 
-          </span>
+          </div>
 
           <!-- <span class="grey-text">
 
@@ -175,7 +196,7 @@
             <!-- Card header -->
             <div class="card-header" role="tab" id="headingThree3">
 
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseThree3" aria-expanded="false" aria-controls="collapseThree3">
+              <a class="accordion-collapse collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseThree3" aria-expanded="false" aria-controls="collapseThree3">
 
                 <h5 class="mb-0">
 
@@ -210,6 +231,14 @@
         </div>
         <!-- Accordion wrapper -->
 
+        <!-- button Dat Phong -->
+        <div class="col-12 text-center mt-3">
+          <button class="btn btn-info font-weight-bold btn-rounded waves-effect waves-light">
+            <strong>Book a room</strong>
+          </button>
+        </div>
+        <!-- button Dat Phong -->
+
       </div>
 
     </div>
@@ -218,7 +247,7 @@
   <!-- main -->
 
   <!-- divider -->
-  <div class="divider-new">
+  <div class="divider-new pt-5 pb-5">
 
     <h3 class="h3-responsive font-weight-bold blue-text mx-3">Room Reviews</h3>
 
@@ -482,3 +511,17 @@
 </div>
 
 {% endblock %}
+
+{% block scripts %}
+<script>
+
+        
+// MDB Lightbox Init
+$(function () {
+    $("#mdb-lightbox-ui").load("{{ url_for('static', filename='ui/mdb-lightbox-ui.html') }}");
+});
+        
+    
+    
+</script>
+{% endblock scripts %}
