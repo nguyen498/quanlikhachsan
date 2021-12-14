@@ -9,6 +9,7 @@ from hotelapp.admin import *
 # You will need to provide a user_loader callback.
 # This callback is used to reload the user object from the user ID stored in the session
 
+
 # Admin
 @app.route('/admin-login', methods=['GET', 'POST'])
 def admin_login():
@@ -20,7 +21,7 @@ def admin_login():
         if user:
             login_user(user)
 
-        return redirect('/admin')
+        return redirect('admin')
 
 
 # Client
@@ -37,14 +38,16 @@ def home():
     return render_template('/client/pages/index.html', s=s, room=room,
                            pages=math.ceil(utils.count_products()/app.config['PAGE_SIZE']))
 
-@app.route("/category")
-def category():
+
+@app.route("/category/<int:category_id>")
+def category_detail(category_id):
     # get parameters
-    _id = int(request.args.get('category_id', 0))
+    category = utils.get_category_by_id(category_id)
+    page = request.args.get('page', 1)
+    room = utils.get_room_by_category(category_id, page=int(page))
+    return render_template('/client/pages/category.html', category=category, room=room,
+                           pages=math.ceil(utils.count_room_in_category(category_id)/app.config['PAGE_SIZE']))
 
-    return render_template('/client/pages/category.html',
-
-    )
 
 
 @app.route("/room/<int:room_id>")
