@@ -78,3 +78,6 @@ def kind_stats():
     return db.session.query(KindOfRoom.id, KindOfRoom.name, func.count(Room.id))\
                      .join(Room, KindOfRoom.id.__eq__(Room.kind_id))\
                      .group_by(KindOfRoom.id, KindOfRoom.name).all()
+
+def get_room(id):
+    return Room.query.get(id)

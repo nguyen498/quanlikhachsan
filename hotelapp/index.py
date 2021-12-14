@@ -49,6 +49,16 @@ def category_detail(category_id):
                            pages=math.ceil(utils.count_room_in_category(category_id)/app.config['PAGE_SIZE']))
 
 
+
+@app.route("/room/<int:room_id>")
+def room(room_id):
+    room = utils.get_room(id=room_id)
+    return render_template(
+        "./client/pages/hotel_details.html",
+        title=room.name,
+        room=room
+    )
+    
 # Client
 @app.route("/login", methods=['get', 'post'])
 def user_login():
