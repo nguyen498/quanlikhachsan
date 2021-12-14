@@ -9,4 +9,9 @@
 } */
 .background-black {
     background-color: rgba(0,0,0,.6);
-  }
+}
+.image-cover {
+    background-size: cover;
+    width: 100%;
+    height: auto;
+}
