@@ -216,7 +216,7 @@
               <div class="card-body">
 
                 <ul class="list-group list-group-flush">
-                  {% for des in room.description.split('.') %}
+                  {% for des in room.description.split('\n') %}
                     <li class="list-group-item">{{ des }}</li>
                   {% endfor %}
                 </ul>

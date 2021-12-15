@@ -1,9 +1,7 @@
 .card-img-top{
     height: 150px
 }
-.dropdown:hover>.dropdown-menu {
-    display: block;
-}
+
 /* .navbar .dropdown-menu:hover {
     position: relative !important;
 } */
@@ -26,4 +24,23 @@
     max-height: 150px;
     object-fit: cover;
     object-position: top;
+}
+
+.pre-line {
+    white-space: pre-line;
+}
+
+@media (min-width: 850px) {
+    .dropdown:hover>.dropdown-menu {
+        display: block;
+    }
+}
+@media (max-width: 767px), (min-width: 800px) and (max-width: 850px) {
+    .dropdown-menu.active {
+        position: static !important;
+        float: none;
+    }
+    .active {
+        display: block;
+    }
 }

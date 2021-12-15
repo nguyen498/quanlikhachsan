@@ -8,11 +8,11 @@ def load_kindofroom():
     return KindOfRoom.query.all()
 
 
-def load_room(kind_id=None, kw=None, from_price=None, to_price=None):
+def get_room(kw=None, kind_id=None, from_price=None, to_price=None, page=1):
     rooms = Room.query.filter(Room.active.__eq__(True))
 
     if kind_id:
-        rooms = rooms.filter(Room.category_id.__eq__(kind_id))
+        rooms = rooms.filter(Room.kind_id.__eq__(kind_id))
 
     if kw:
         rooms = rooms.filter(Room.name.contains(kw))
@@ -23,7 +23,12 @@ def load_room(kind_id=None, kw=None, from_price=None, to_price=None):
     if to_price:
         rooms = rooms.filter(Room.price.__le__(to_price))
 
-    return rooms
+    page_size = app.config['PAGE_SIZE']
+    start = (page - 1) * page_size
+    end = start + page_size
+
+    return rooms.slice(start, end).all()
+
 
 
 def count_products():
@@ -52,12 +57,7 @@ def get_category_by_id(category_id):
     return KindOfRoom.query.get(category_id)
 
 
-def get_room_by_category(category_id, page=1):
-    rooms = Room.query.filter(Room.kind_id.__eq__(category_id))
-    page_size = app.config['PAGE_SIZE']
-    start = (page - 1) * page_size
 
-    return rooms.slice(start, start + page_size).all()
 
 
 def check_login(username, password, role=UserRole.USER):
@@ -76,5 +76,5 @@ def kind_stats():
                      .join(Room, KindOfRoom.id.__eq__(Room.kind_id))\
                      .group_by(KindOfRoom.id, KindOfRoom.name).all()
 
-def get_room(id):
+def get_room_by_id(id):
     return Room.query.get(id)
