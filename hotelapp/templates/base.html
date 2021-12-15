@@ -42,6 +42,11 @@
     <script>
         // Animation init
         new WOW().init();
+
+        function dropMenu() {
+            let menu = document.getElementsByClassName("my-menu");
+            menu[0].classList.toggle('active');
+        }
     </script>
     {% block scripts %}{% endblock scripts %}
 </body>

@@ -29,10 +29,10 @@
           {% endif %}
           <li class="nav-item dropdown">
               <!--Trigger-->
-              <a class="nav-link dropdown-toggle">Loại Phòng</a>
+              <a onclick="dropMenu()" class="nav-link dropdown-toggle">Loại Phòng</a>
             
               <!--Menu-->
-              <div class="dropdown-menu dropdown-primary position-no-important">
+              <div class="dropdown-menu dropdown-primary position-no-important my-menu">
                 {% for k in kindofroom %}
                 <a class="dropdown-item" href="{{ url_for('category_detail', category_id=k.id)}}">{{ k.name }}</a>
                 {% endfor %}

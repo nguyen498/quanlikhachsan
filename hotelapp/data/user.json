@@ -1,0 +1,3 @@
+[{"id":3, "name":"chonguyen", "username":"adminlivip22", "password":"202cb962ac59075b964b07152d234b70", "email":"adminlivip22@gmail.com", "active":1, "joined_date":"2021-12-08 16:58:52", "user_role":"ADMIN"},
+ {"id":4, "name":"testuser", "username":"testuser", "password":"202cb962ac59075b964b07152d234b70", "email":"testuser@gmail.com", "active":1, "joined_date":"2021-12-08 17:05:44", "user_role":"USER"},
+ {"id":5, "name":"chodung", "username":"chodung", "password":"202cb962ac59075b964b07152d234b70", "email":"chodung@gmail.com", "active":1, "joined_date":"2021-12-14 11:31:56", "user_role":"USER"}]

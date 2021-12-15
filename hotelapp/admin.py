@@ -1,13 +1,16 @@
 from flask_admin import AdminIndexView
 from flask_admin.base import Admin, BaseView, expose
-from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.sqla import ModelView, view
 from flask_login import current_user
 from flask_login.utils import logout_user
 from werkzeug.utils import redirect
+from wtforms.fields import TextAreaField
+
 from hotelapp import app, db, utils
 from hotelapp.models import KindOfRoom, Room, User, UserRole
 
 
+# Admin View
 class AdminHomeView(AdminIndexView):
     @expose('/')
     def home(self):
@@ -25,6 +28,12 @@ class RoomView(ModelView):
     column_searchable_list = ['name', 'description']
     column_filters = ['name', 'price']
     column_exclude_list = ['image', 'active', 'created_date']
+    form_overrides = dict(description=TextAreaField)
+    form_widget_args = {
+        'description': {
+            'rows': 5
+        }
+    }
     column_labels = {
         'name': 'Ten SP',
         'description': 'Mo ta',

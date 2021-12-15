@@ -4,7 +4,6 @@
 
 <section class="register container mt-4" id="register" style="min-height: 300px;">
 
-{% include './admin/layout/error_msg.html' %}
 
     {% if current_user.is_authenticated %}
     <h1 class="text-center" > Welcome <span class="text-danger">{{ current_user.name }}</span> to administrator website </h1>

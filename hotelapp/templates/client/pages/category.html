@@ -64,7 +64,10 @@
 
     <div class="container">
 
-      <h2 class="font-weight-bold my-5 text-center">{{ category.name }}</h2>
+      <form class="form-inline md-form mr-auto mb-4">
+        <input name="keyword" class="form-control mr-sm-2 ml-auto" type="text" placeholder="Search" aria-label="Search">
+        <button class="btn blue-gradient btn-rounded btn-sm my-0" type="submit">Search</button>
+      </form>
 
       <!-- <p class="grey-text w-responsive text-center mx-auto mb-5">Duis aute irure dolor in reprehenderit in voluptate
         velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
@@ -93,7 +96,7 @@
             <!--Card content-->
             <div class="card-body">
               <!--Title-->
-              <a>
+              <a href="{{ url_for('room_detail', room_id= r.id) }}" class="black-text">
                 <h5 class="font-weight-bold text-uppercase pb-2">
                   <strong>{{ r.name }}</strong>
                 </h5>

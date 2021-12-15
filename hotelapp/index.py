@@ -32,7 +32,7 @@ def home():
     from_price = request.args.get("from_price")
     to_price = request.args.get("to_price")
     s = "Wellcome to my website"
-    room = utils.load_room(kind_id=kind_id, kw=kw, from_price=from_price,
+    room = utils.get_room(kind_id=kind_id, kw=kw, from_price=from_price,
                            to_price=to_price)
     return render_template('/client/pages/index.html', s=s, room=room)
 
@@ -40,13 +40,16 @@ def home():
 @app.route("/category/<int:category_id>")
 def category_detail(category_id):
     # get parameters
+    keyword = request.args.get('keyword', "")
     category = utils.get_category_by_id(category_id)
     page = request.args.get('page', 1)
-    room = utils.get_room_by_category(category_id, page=int(page))
+    room = utils.get_room(kw=keyword, kind_id=category_id, page=int(page))
+    
     return render_template(
-        '/client/pages/category.html', 
+        '/client/pages/category.html',
         title=category.name,
-        category=category, room=room,
+        category=category, 
+        room=room,
         pages=math.ceil(utils.count_room_in_category(category_id)/app.config['PAGE_SIZE'])
     )
 
@@ -54,9 +57,9 @@ def category_detail(category_id):
 
 @app.route("/room/<int:room_id>")
 def room_detail(room_id):
-    room = utils.get_room(id=room_id)
+    room = utils.get_room_by_id(id=room_id)
     return render_template(
-        "./client/pages/hotel_details.html",
+        "./client/pages/room_details.html",
         title=room.name,
         room=room
     )
