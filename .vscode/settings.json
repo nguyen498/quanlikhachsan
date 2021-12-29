@@ -1,0 +1,5 @@
+{
+    "python.linting.enabled": true,
+    "html.validate.scripts": false,
+    "html.validate.styles": false
+}
