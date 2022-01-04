@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+
+{% block title %} Đặt Phòng {% endblock %}
+
+{% block intro %}
+<style>
+  .jarallax {
+    min-height: 400px;
+  }
+
+  .md-form .input-prefix {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    -webkit-transition: color .2s;
+    transition: color .2s;
+    color: rgba(0,0,0,0.87);
+    pointer-events: none;
+  }
+
+  .md-form.input-with-post-icon .input-prefix {
+      right: 16px;
+      left: initial;
+  }
+  .md-form .input-prefix.active {
+      color: #4285f4;
+  }
+  div.datepicker input ~ i.input-prefix {
+    cursor: pointer;
+    pointer-events: all;
+  }
+  .datepicker {
+    margin-top: 2.5rem !important;
+  }
+
+</style>
+
+<div id="home" class="view jarallax room-intro" data-jarallax='{"speed": 0.2}' max-height="700px"
+  style="background-image: url({{ url_for('static', filename='images/london_street.jpg')}});">
+  <div class="mask rgba-black-slight background-black">
+    <div class="container h-100 d-flex justify-content-center align-items-center">
+      <div class="row smooth-scroll">
+        <div class="col-md-12 text-center white-text mt-4">
+          <div class="wow fadeInDown" data-wow-delay="0.2s">
+            <h1 class="white-text display-4 font-weight-bold mt-5 mt-xl-2">
+              <em>Reservation</em>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+
+  <!--Section: Block Content-->
+  <section class="mt-5 mb-4">
+
+    <!--Grid row-->
+    <form id="checkout-form" class="row">
+
+      <!--Grid column-->
+      <div class="col-lg-8 mb-4">
+
+        <!-- Card -->
+        <div class="card wish-list pb-1">
+          <div class="card-body">
+
+            <h5 class="mb-2">Thông tin</h5>
+
+            <!-- Reserve Room -->
+            <div class="md-form md-outline mb-0 mb-lg-4">
+              <input type="text" id="reserveBy" name="reserveBy" value="{{ room.name }}" class="form-control mb-0 mb-lg-2"
+                style="background: #dddddd52;" disabled>
+              <label for="firstName" style="background: transparent;">Phòng Đặt</label>
+            </div>
+
+            <!-- Reserve by -->
+            <div class="md-form md-outline mb-0 mb-lg-4">
+              <input type="text" id="reserveBy" name="reserveBy" class="form-control mb-0 mb-lg-2">
+              <label for="firstName">Người Đặt</label>
+            </div>
+
+            <!-- Reserve by -->
+            <div class="md-form md-outline mb-0 mb-lg-4">
+              <input type="number" id="phone" name="phone" class="form-control mb-0 mb-lg-2">
+              <label for="firstName">Điện Thoại</label>
+            </div>
+
+            <!-- Checkin time -->
+            <div class="md-form md-outline input-with-post-icon datepicker" inline="true">
+              <input type="date" id="checkInTime" name="checkInTime" class="form-control">
+              <label for="example">Ngày đặt phòng</label>
+            </div>
+
+
+            <!-- Checkout time -->
+            <div class="md-form md-outline input-with-post-icon datepicker">
+              <input type="date" id="checkoutTime" name="checkoutTime" class="form-control">
+              <label for="form16">Ngày nhận phòng</label>
+            </div>
+
+            <!-- Additional information -->
+            <!-- <div class="md-form md-outline">
+              <textarea id="form76" class="md-textarea form-control" rows="4"></textarea>
+              <label for="form76">Additional information</label>
+            </div> -->
+
+          </div>
+        </div>
+        <!-- Card -->
+
+      </div>
+      <!--Grid column-->
+
+      <!--Grid column-->
+      <div class="col-lg-4">
+
+        <!-- Card -->
+        <div class="card mb-4">
+          <div class="card-body">
+
+            <h5 class="mb-3">The total amount of</h5>
+
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0" style="border: 0;">
+                Temporary amount
+                <span>$53.98</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0" style="border: 0;">
+                Shipping
+                <span>Gratis</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3" style="border-top: 1px solid rgba(0,0,0,.125) !important;">
+                <div>
+                  <strong>The total amount of</strong>
+                  <strong>
+                    <p class="mb-0">(including VAT)</p>
+                  </strong>
+                </div>
+                <span><strong>$53.98</strong></span>
+              </li>
+            </ul>
+
+            
+            <input form="checkout-form" type="submit" class="btn btn-primary btn-block waves-effect waves-light"></input>
+
+          </div>
+        </div>
+        <!-- Card -->
+
+        <!-- Card -->
+        <div class="card mb-4">
+          <div class="card-body">
+
+            <a class="dark-grey-text d-flex justify-content-between collapsed" data-toggle="collapse"
+              href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+              Add a discount code (optional)
+              <span><i class="fas fa-chevron-down pt-1"></i></span>
+            </a>
+
+            <div class="collapse" id="collapseExample" style="">
+              <div class="mt-3">
+                <div class="md-form md-outline mb-0">
+                  <input type="text" id="discount-code" class="form-control font-weight-light"
+                    placeholder="Enter discount code">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Card -->
+
+      </div>
+      <!--Grid column-->
+
+
+      <!-- Cac Khach Hang -->
+
+      {% for customer in range(0, room.quantity) %}
+      <!--Grid column-->
+      <div class="col-lg-8 mb-4">
+      
+        <!-- Card -->
+        <div id="checkout-form" class="card wish-list pb-1">
+          <div class="card-body">
+      
+            <h5 class="mb-2">Khách Hàng {{loop.index}}</h5>
+      
+            <!-- Reserve by -->
+            <div class="md-form md-outline mb-0 mb-lg-4">
+              <input type="text" id="test" name="test" value="test" class="form-control mb-0 mb-lg-2">
+              <label for="firstName">Tên Khách Hàng</label>
+            </div>
+
+
+            <!-- Id  -->
+            <div class="md-form md-outline mb-0 mb-lg-4">
+              <input type="text" id="idCard" name="idCard" class="form-control mb-0 mb-lg-2">
+              <label for="firstName">CMND</label>
+            </div>
+
+            <!-- Address  -->
+            <div class="md-form md-outline mb-0 mb-lg-4">
+              <input type="text" id="address" name="address" class="form-control mb-0 mb-lg-2">
+              <label for="firstName">Địa Chỉ</label>
+            </div>
+      
+          </div>
+        </div>
+        <!-- Card -->
+      
+      </div>
+      <!--Grid column-->
+      {% endfor %}
+
+    </form>
+    <!--Grid row-->
+
+  </section>
+  <!--Section: Block Content-->
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}
