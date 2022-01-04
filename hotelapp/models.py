@@ -29,11 +29,11 @@ class User(BaseModel, UserMixin):
         return self.name
 
 
-class KindOfRoom(BaseModel):
-    __tablename__ = 'kindofroom'
+class RoomType(BaseModel):
+    __tablename__ = 'room_type'
 
     name = Column(String(50), nullable=False)
-    room = relationship('Room', backref='KindOfRoom', lazy=True)
+    room = relationship('Room', backref='RoomType', lazy=True)
 
     def __str__(self):
         return self.name
@@ -48,35 +48,84 @@ class Room(BaseModel):
     image = Column(String(255))
     active = Column(Boolean, default=True)
     quantity = Column(Integer, default=1)
-    kind_id = Column(Integer, ForeignKey(KindOfRoom.id), nullable=False)
+    category_id = Column(Integer, ForeignKey(RoomType.id), nullable=False)
 
     def __str__(self):
         return self.name
 
 
+class CustomerType(BaseModel):
+    __tablename__ = 'customer_type'
+
+    name = Column(String(50), nullable=False)
+    customer = relationship('Customer', backref='CustomerType', lazy=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Customer(BaseModel):
+    __tablename__ = 'customer'
+
+    name = Column(String(50), nullable=False)
+    description = Column(String(255))
+    idCard = Column(String(50), nullable=False)
+    phone = Column(String(50), nullable=False)
+    address = Column(String(255), nullable=False)
+    type_id = Column(Integer, ForeignKey(CustomerType.id), nullable=False)
+
+    def __str__(self):
+        return self.name
+
+
+class Reservation(BaseModel):
+    __tablename__ = 'reservation'
+
+    roomID = Column(Integer, ForeignKey(Room.id), nullable=False)
+    customerID = Column(String(50), nullable=False)
+    checkInTime = Column(DateTime, default=datetime.now())
+    checkOutTime = Column(DateTime, default=datetime.now())
+
+
+customer_reservation = db.Table('customer_reservation', 
+    Column('reservation_id', Integer, ForeignKey('reservation.id'), primary_key=True), # Khóa chính
+    Column('customer_id', Integer, ForeignKey('customer.id'), primary_key=True) # Khóa chính
+    # Column('customer_type') 
+)
+
+class Receipt(BaseModel):
+    __tablename__ = 'receipt'
+
+    checkInTime = Column(DateTime, default=datetime.now())
+    checkOutTime = Column(DateTime, default=datetime.now())
+    unitPrice = Column(Float, default=0)
+    surcharge = Column(Float, default=0)
+    customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
+    reservation_id = Column(Integer, ForeignKey(Reservation.id), nullable=False)
+
 if __name__ == '__main__':
     db.create_all()
 
-    # k1 = KindOfRoom(name='Phòng đơn')
-    # k2 = KindOfRoom(name='Phòng đôi')
-    # k3 = KindOfRoom(name='Phòng ba')
-    # k4 = KindOfRoom(name='Phòng gia đình')
-    # k5 = KindOfRoom(name='Homestay')
-    #
+    # k1 = RoomType(name='Phòng đơn')
+    # k2 = RoomType(name='Phòng đôi')
+    # k3 = RoomType(name='Phòng ba')
+    # k4 = RoomType(name='Phòng gia đình')
+    # k5 = RoomType(name='Homestay')
+    
     # db.session.add(k1)
     # db.session.add(k2)
     # db.session.add(k3)
     # db.session.add(k4)
     # db.session.add(k5)
-    #
-    # room = [{
+    
+    # rooms = [{
     #     "id": 1,
     #     "name": "Deluxe giường đơn",
     #     "description": "Wifi miễn phí\n1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
     #     "price": 400000,
     #     "image": "images/p1.png",
     #     "quantity": 2,
-    #     "kind_id": 1
+    #     "category_id": 1
     # }, {
     #     "id": 2,
     #     "name": "Phòng hai giường thường",
@@ -84,7 +133,7 @@ if __name__ == '__main__':
     #     "price": 700000,
     #     "image": "images/p2.png",
     #     "quantity": 4,
-    #     "kind_id": 2
+    #     "category_id": 2
     # }, {
     #     "id": 3,
     #     "name": "Phòng ba giường thường",
@@ -92,7 +141,7 @@ if __name__ == '__main__':
     #     "price": 1000000,
     #     "image": "images/p3.png",
     #     "quantity": 6,
-    #     "kind_id": 3
+    #     "category_id": 3
     # }, {
     #     "id": 4,
     #     "name": "Phòng gia đình thường",
@@ -100,7 +149,7 @@ if __name__ == '__main__':
     #     "price": 1200000,
     #     "image": "images/p4.png",
     #     "quantity": 6,
-    #     "kind_id": 4
+    #     "category_id": 4
     # }, {
     #     "id": 5,
     #     "name": "Homestay",
@@ -108,18 +157,18 @@ if __name__ == '__main__':
     #     "price": 3000000,
     #     "image": "images/p5.png",
     #     "quantity": 8,
-    #     "kind_id": 5
+    #     "category_id": 5
     # }]
-    #
-    # for r in room:
+    
+    # for r in rooms:
     #     ro = Room(name=r['name'], price=r['price'], image=r['image'], quantity=r['quantity'],
-    #               description=r['description'], kind_id=r['kind_id'])
+    #               description=r['description'], category_id=r['category_id'])
     #     db.session.add(ro)
-    #
+    
     # db.session.commit()
-    #
+    
     # r = Room(name='phong mot giuong vip',
     #          description='Wifi miễn phí1 giường nhỏDiện tích phòng: 32 m²Hướng phòng: Thành phốPhòng tắm vòi sen & bồn tắm',
-    #          price='1000000', image="images/p1.png", kind_id='1')
+    #          price='1000000', image="images/p1.png", category_id='1')
     # db.session.add(r)
     # db.session.commit()

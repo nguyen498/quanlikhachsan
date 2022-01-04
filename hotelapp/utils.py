@@ -1,18 +1,18 @@
 from hotelapp import app, db
-from hotelapp.models import KindOfRoom, Room, User, UserRole
+from hotelapp.models import RoomType, Room, User, UserRole
 from sqlalchemy import  func
 import hashlib
 
 
 def load_kindofroom():
-    return KindOfRoom.query.all()
+    return RoomType.query.all()
 
 
-def get_room(kw=None, kind_id=None, from_price=None, to_price=None, page=1):
+def get_room(kw=None, category_id=None, from_price=None, to_price=None, page=1):
     rooms = Room.query.filter(Room.active.__eq__(True))
 
-    if kind_id:
-        rooms = rooms.filter(Room.kind_id.__eq__(kind_id))
+    if category_id:
+        rooms = rooms.filter(Room.category_id.__eq__(category_id))
 
     if kw:
         rooms = rooms.filter(Room.name.contains(kw))
@@ -36,7 +36,7 @@ def count_products():
 
 
 def count_room_in_category(category_id):
-    return Room.query.filter(Room.kind_id.__eq__(category_id)).count()
+    return Room.query.filter(Room.category_id.__eq__(category_id)).count()
 
 
 def add_user(name, username, password, **kwargs):
@@ -54,7 +54,7 @@ def get_user_by_id(user_id):
 
 
 def get_category_by_id(category_id):
-    return KindOfRoom.query.get(category_id)
+    return RoomType.query.get(category_id)
 
 
 
@@ -72,9 +72,9 @@ def check_login(username, password, role=UserRole.USER):
 
 #Lay du lieu thong ke
 def kind_stats():
-    return db.session.query(KindOfRoom.id, KindOfRoom.name, func.count(Room.id))\
-                     .join(Room, KindOfRoom.id.__eq__(Room.kind_id))\
-                     .group_by(KindOfRoom.id, KindOfRoom.name).all()
+    return db.session.query(RoomType.id, RoomType.name, func.count(Room.id))\
+                     .join(Room, RoomType.id.__eq__(Room.category_id))\
+                     .group_by(RoomType.id, RoomType.name).all()
 
 def get_room_by_id(id):
     return Room.query.get(id)

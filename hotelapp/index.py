@@ -27,14 +27,22 @@ def admin_login():
 # Client
 @app.route("/")
 def home():
-    kind_id = request.args.get("kind_id")
+    category_id = request.args.get("category_id")
     kw = request.args.get("keyword")
     from_price = request.args.get("from_price")
     to_price = request.args.get("to_price")
     s = "Wellcome to my website"
-    room = utils.get_room(kind_id=kind_id, kw=kw, from_price=from_price,
+    room = utils.get_room(category_id=category_id, kw=kw, from_price=from_price,
                            to_price=to_price)
     return render_template('/client/pages/index.html', s=s, room=room)
+
+
+@app.route("/checkout/<int:room_id>")
+def checkout(room_id):
+    room = utils.get_room_by_id(id=room_id)
+    return render_template('/client/pages/checkout.html',
+        room=room
+    )
 
 
 @app.route("/category/<int:category_id>")
@@ -43,7 +51,7 @@ def category_detail(category_id):
     keyword = request.args.get('keyword', "")
     category = utils.get_category_by_id(category_id)
     page = request.args.get('page', 1)
-    room = utils.get_room(kw=keyword, kind_id=category_id, page=int(page))
+    room = utils.get_room(kw=keyword, category_id=category_id, page=int(page))
     
     return render_template(
         '/client/pages/category.html',
