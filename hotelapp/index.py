@@ -47,29 +47,33 @@ def checkout(room_id):
     phone = request.form.get('phone')
     checkInTime = request.form.get('checkInTime')
     checkoutTime = request.form.get('checkoutTime')
-    unfilterTypes = request.form.getlist('customerType[]')
     
-    customerNames = list(filter(None, request.form.getlist('customerName[]')))
-    customerTypes = list(filter(None, request.form.getlist('customerType[]')))
-    idCards = list(filter(None, request.form.getlist('idCard[]')))
-    addresses = list(filter(None, request.form.getlist('address[]')))
+    customerNames = request.form.getlist('customerName[]')
+    customerTypes = request.form.getlist('customerType[]')
+    idCards = request.form.getlist('idCard[]')
+    addresses = request.form.getlist('address[]')
+    family_number = len(customerNames)
 
     if request.method == 'POST':
         reserveInfos = [reserveBy, phone, checkInTime, checkoutTime]
         familyInfos = [customerNames, customerTypes, addresses]
+
+
         # Reserve Room
-        # any: True if any info True
-        # all: True if all info True
         try:
-            # first_check: Check if customer enter family infos
-            if any(familyInfos) or idCards:
-                # Check if familyInfos contain empty value
-                print(len(all(familyInfos)))
-                if all(len(familyInfos)):
-                    first_check_is_done = True
-                else:
-                    err_msg = "Please enter full Family info in the form"
-            # second_check: Check if ReserveInfo contain empty value
+            # Check if customer has members
+            if family_number > 0:
+                # Check if customer enter family infos (any: True if any info True)
+                if any(familyInfos) or idCards:
+                    # Check if familyInfos contain empty value (all: True if all info True)
+                    if all(familyInfos):
+                        first_check_is_done = True
+                    else:
+                        err_msg = "Please enter full Family info in the form"
+            else:
+                first_check_is_done = True
+
+            # Check if ReserveInfo contain empty value 
             if all(reserveInfos) and first_check_is_done:
                 utils.reserveRoom(customerNames, customerTypes, idCards, addresses, room_id, reserveBy, checkInTime, checkoutTime, phone)
                 success_msg = "Reserve Room Successfully"
@@ -87,8 +91,6 @@ def checkout(room_id):
         , customer_types_db=customer_types_db
         , success_msg=success_msg
         , err_msg=err_msg
-        , reserveBy=reserveBy, phone=phone, checkInTime=checkInTime, checkoutTime=checkoutTime
-        , customerNames=customerNames, unfilterTypes=unfilterTypes, idCards=idCards, addresses=addresses
     )
 
 
