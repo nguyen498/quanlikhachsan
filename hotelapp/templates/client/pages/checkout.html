@@ -63,7 +63,7 @@
   <section class="mt-5 mb-4">
 
     <!--Grid row-->
-    <form id="checkout-form" class="row">
+    <form id="checkout-form" method="post" action="{{ url_for('checkout', room_id=room.id) }}" class="row">
 
       <!--Grid column-->
       <div class="col-lg-8 mb-4">
@@ -72,54 +72,50 @@
         <div class="card wish-list pb-1">
           <div class="card-body">
 
+            {% include 'client/layout/message.html' %}
+
             <h5 class="mb-2">Thông tin</h5>
 
             <!-- Reserve Room -->
             <div class="md-form md-outline mb-0 mb-lg-4">
-              <input type="text" id="reserveBy" name="reserveBy" value="{{ room.name }}" class="form-control mb-0 mb-lg-2"
+              <input type="text" id="roomID" name="roomID" value="{{ room.name }}" class="form-control mb-0 mb-lg-2"
                 style="background: #dddddd52;" disabled>
               <label for="firstName" style="background: transparent;">Phòng Đặt</label>
             </div>
 
             <!-- Reserve by -->
             <div class="md-form md-outline mb-0 mb-lg-4">
-              <input type="text" id="reserveBy" name="reserveBy" class="form-control mb-0 mb-lg-2">
-              <label for="firstName">Người Đặt</label>
+              <input type="text" id="reserveBy" name="reserveBy" value="{{ reserveBy }}" class="form-control mb-0 mb-lg-2" required>
+              <label for="reserveBy">Người Đặt *</label>
             </div>
 
             <!-- Reserve by -->
             <div class="md-form md-outline mb-0 mb-lg-4">
-              <input type="number" id="phone" name="phone" class="form-control mb-0 mb-lg-2">
-              <label for="firstName">Điện Thoại</label>
+              <input type="number" id="phone" name="phone" value="{{ phone }}" class="form-control mb-0 mb-lg-2" required>
+              <label for="phone">Điện Thoại *</label>
             </div>
 
             <!-- Checkin time -->
             <div class="md-form md-outline input-with-post-icon datepicker" inline="true">
-              <input type="date" id="checkInTime" name="checkInTime" class="form-control">
-              <label for="example">Ngày đặt phòng</label>
+              <input type="date" id="checkInTime" name="checkInTime" value="{{ checkInTime }}" class="form-control" required>
+              <label for="checkInTime">Ngày đặt phòng *</label>
             </div>
 
 
             <!-- Checkout time -->
             <div class="md-form md-outline input-with-post-icon datepicker">
-              <input type="date" id="checkoutTime" name="checkoutTime" class="form-control">
-              <label for="form16">Ngày nhận phòng</label>
+              <input type="date" id="checkoutTime" name="checkoutTime" value="{{ checkoutTime }}" class="form-control" required>
+              <label for="form16">Ngày nhận phòng *</label>
             </div>
-
-            <!-- Additional information -->
-            <!-- <div class="md-form md-outline">
-              <textarea id="form76" class="md-textarea form-control" rows="4"></textarea>
-              <label for="form76">Additional information</label>
-            </div> -->
-
           </div>
         </div>
         <!-- Card -->
 
       </div>
-      <!--Grid column-->
+      <!-- End Grid column-->
 
-      <!--Grid column-->
+
+      <!-- Submit column -->
       <div class="col-lg-4">
 
         <!-- Card -->
@@ -178,9 +174,17 @@
         <!-- Card -->
 
       </div>
-      <!--Grid column-->
+      <!--Submit column-->
 
-
+      <!-- Button Add Customer -->
+      <div class="col-lg-8 mb-4 d-flex align-items-center">
+        <button type="button" class="btn btn-primary"><i class="fas fa-plus mr-1"></i></i> Thêm Khách đi chung (Optional)</button>
+        <a class="nav-link" data-toggle="tab" href="#panel90" role="tab">
+          <i class="fas fa-users ml-1"aria-hidden="true"></i>
+          <span class="ml-2">{{ room.quantity }} remaining</span>
+        </a>
+      </div>
+      
       <!-- Cac Khach Hang -->
 
       {% for customer in range(0, room.quantity) %}
@@ -189,30 +193,55 @@
       
         <!-- Card -->
         <div id="checkout-form" class="card wish-list pb-1">
+
           <div class="card-body">
-      
-            <h5 class="mb-2">Khách Hàng {{loop.index}}</h5>
-      
-            <!-- Reserve by -->
-            <div class="md-form md-outline mb-0 mb-lg-4">
-              <input type="text" id="test" name="test" value="test" class="form-control mb-0 mb-lg-2">
-              <label for="firstName">Tên Khách Hàng</label>
-            </div>
+            <a class="dark-grey-text d-flex justify-content-between collapsed" data-toggle="collapse"
+              href="#customerCollapse-{{ customer }}" aria-expanded="false" aria-controls="customerCollapse-{{ customer }}">
+              Khách Hàng {{loop.index}} (Có thể bỏ trống)
+              <span><i class="fas fa-chevron-down pt-1"></i></span>
+            </a>
+          
+            <div class="collapse" id="customerCollapse-{{ customer }}" style="">
+              <div class="mt-3">
+                <!-- Customer Name -->
+                <div class="md-form md-outline mb-0 mb-lg-4">
+                  <input type="text" id="customerName[]" name="customerName[]" value="{{ customerNames[loop.index0] }}" class="form-control mb-0 mb-lg-2" required>
+                  <label for="customerName[]">Tên Khách Hàng *</label>
+                </div>
+                
+                
+                <!-- Customer Type  -->
+                <div class="md-form md-outline mb-0 mb-lg-4">
+                  <select name="customerType[]" class="browser-default custom-select" required>
+                    <option value="" selected>Chọn Loại Khách *</option>
+                    <!-- Set outer_loop to variables so we can use later -->
+                    {% set outer_loop = loop %}
+                    
+                    {% for customerTypedb in customer_types_db %}
+                      {% if customerTypedb.id|lower == unfilterTypes[outer_loop.index0]|lower %}
+                      <option value="{{ customerTypedb.id }}" selected>{{ customerTypedb.name }}</option>
+                      {% else %}
+                      <option value="{{ customerTypedb.id }}">{{ customerTypedb.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
 
-
-            <!-- Id  -->
-            <div class="md-form md-outline mb-0 mb-lg-4">
-              <input type="text" id="idCard" name="idCard" class="form-control mb-0 mb-lg-2">
-              <label for="firstName">CMND</label>
+                <!-- Id  -->
+                <div class="md-form md-outline mb-0 mb-lg-4">
+                  <input type="text" id="idCard[]" name="idCard[]" value="{{ idCards[loop.index0] }}" inputmode="numeric" pattern="[0-9\s]{8,12}" class="form-control mb-0 mb-lg-2">
+                  <label for="idCard[]">CMND / CCCD (8 đến 12 số)</label>
+                </div>
+                
+                <!-- address  -->
+                <div class="md-form md-outline mb-0 mb-lg-4">
+                  <input type="text" id="address[]" name="address[]" value="{{ addresses[loop.index0] }}" class="form-control mb-0 mb-lg-2" required>
+                  <label for="address[]">Địa Chỉ *</label>
+                </div>
+              </div>
             </div>
-
-            <!-- Address  -->
-            <div class="md-form md-outline mb-0 mb-lg-4">
-              <input type="text" id="address" name="address" class="form-control mb-0 mb-lg-2">
-              <label for="firstName">Địa Chỉ</label>
-            </div>
-      
           </div>
+         
         </div>
         <!-- Card -->
       
@@ -230,8 +259,16 @@
 </div>
 
 
-
-
-
-
 {% endblock %}
+
+{% block scripts %}
+<script>
+  let customerTypes = [];
+
+  {% for customer_type_db in customer_types_db %}
+  customerTypes.push('{{ customer_type_db }}')
+  {% endfor %}
+
+  console.log(customerTypes);
+</script>
+{% endblock scripts %}

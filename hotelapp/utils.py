@@ -1,5 +1,5 @@
 from hotelapp import app, db
-from hotelapp.models import RoomType, Room, User, UserRole
+from hotelapp.models import Customer, CustomerReservation, CustomerType, Reservation, RoomType, Room, User, UserRole
 from sqlalchemy import  func
 import hashlib
 
@@ -78,3 +78,57 @@ def kind_stats():
 
 def get_room_by_id(id):
     return Room.query.get(id)
+
+def get_customer_type():
+    return CustomerType.query.all()
+
+
+def create_customer(name, idCard, customerType, address):
+    new_customer = Customer(
+        name=name,
+        idCard=idCard,
+        address=address,
+        type_id=customerType
+    )
+    db.session.add(new_customer)
+    db.session.commit()
+    return new_customer
+    
+
+def create_reservation(room_id, reserveBy, checkInTime, checkOutTime, phone):
+    new_reservation = Reservation(
+        room_id=room_id,
+        reserveBy=reserveBy,
+        phone=phone,
+        checkInTime=checkInTime,
+        checkOutTime=checkOutTime
+    )
+    db.session.add(new_reservation)
+    db.session.commit()
+    return new_reservation
+
+
+def create_customer_reservation(reservation_id, customer_id):
+    new_customer_reservation = CustomerReservation(
+        reservation_id=reservation_id,
+        customer_id=customer_id
+    )
+    db.session.add(new_customer_reservation)
+    db.session.commit()
+
+
+def reserveRoom(customerNames, customerTypes, idCards, addresses,
+                room_id, reserveBy, checkInTime, checkoutTime, phone):
+    # Create reservation
+    new_reservation = create_reservation(room_id, reserveBy, checkInTime, checkoutTime, phone)
+    
+    for i in range(0, len(customerNames)):
+        # Create Each Customer
+        new_customer = create_customer(customerNames[i], idCards[i], customerTypes[i], addresses[i])
+        # Add Each Family Customer to CustomerReservation
+        create_customer_reservation(new_reservation.id, new_customer.id)
+    
+    
+   
+   
+    
