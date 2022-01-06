@@ -1,0 +1,10 @@
+{% if success_msg %}
+<div class="alert-success">
+    <p class="ml-3">{{ success_msg }}</p>
+</div>
+{% endif %}
+{% if err_msg %}
+<div class="alert-danger">
+    <p class="ml-3">{{ err_msg }}</p>
+</div>
+{% endif %}

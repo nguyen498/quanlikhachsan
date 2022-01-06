@@ -7,7 +7,7 @@ from werkzeug.utils import redirect
 from wtforms.fields import TextAreaField
 
 from hotelapp import app, db, utils
-from hotelapp.models import RoomType, Room, User, UserRole
+from hotelapp.models import Customer, CustomerType, Receipt, RoomType, Room, User, UserRole
 
 
 # Admin View
@@ -68,5 +68,8 @@ admin = Admin(app, name='Hotel website administrator', template_mode='bootstrap4
 
 admin.add_view(AdminAutheticatedView(RoomType, db.session))
 admin.add_view(RoomView(Room, db.session))
+admin.add_view(AdminAutheticatedView(CustomerType, db.session))
+admin.add_view(AdminAutheticatedView(Customer, db.session))
+admin.add_view(AdminAutheticatedView(Receipt, db.session))
 admin.add_view(AdminAutheticatedView(User, db.session))
 admin.add_view(LogoutView(name="Log out"))

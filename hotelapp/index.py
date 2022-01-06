@@ -1,5 +1,6 @@
 import math
 from flask import render_template, request, redirect, url_for
+from sqlalchemy.sql.elements import Null
 from hotelapp import app, utils
 from hotelapp import login_manager
 from flask_login import current_user, login_user, logout_user
@@ -37,11 +38,59 @@ def home():
     return render_template('/client/pages/index.html', s=s, room=room)
 
 
-@app.route("/checkout/<int:room_id>")
+@app.route("/checkout/<int:room_id>", methods=['GET', 'POST'])
 def checkout(room_id):
+    first_check_is_done = False
+    success_msg = ""
+    err_msg = ""
+    reserveBy = request.form.get('reserveBy')
+    phone = request.form.get('phone')
+    checkInTime = request.form.get('checkInTime')
+    checkoutTime = request.form.get('checkoutTime')
+    
+    customerNames = request.form.getlist('customerName[]')
+    customerTypes = request.form.getlist('customerType[]')
+    idCards = request.form.getlist('idCard[]')
+    addresses = request.form.getlist('address[]')
+    family_number = len(customerNames)
+
+    if request.method == 'POST':
+        reserveInfos = [reserveBy, phone, checkInTime, checkoutTime]
+        familyInfos = [customerNames, customerTypes, addresses]
+
+
+        # Reserve Room
+        try:
+            # Check if customer has members
+            if family_number > 0:
+                # Check if customer enter family infos (any: True if any info True)
+                if any(familyInfos) or idCards:
+                    # Check if familyInfos contain empty value (all: True if all info True)
+                    if all(familyInfos):
+                        first_check_is_done = True
+                    else:
+                        err_msg = "Please enter full Family info in the form"
+            else:
+                first_check_is_done = True
+
+            # Check if ReserveInfo contain empty value 
+            if all(reserveInfos) and first_check_is_done:
+                utils.reserveRoom(customerNames, customerTypes, idCards, addresses, room_id, reserveBy, checkInTime, checkoutTime, phone)
+                success_msg = "Reserve Room Successfully"
+            else:
+                err_msg = "Please enter full reservation info in the form"
+        except Exception as exception:
+            err_msg = 'Error from server: ' + str(exception)
+
+    
+    # Render Template
     room = utils.get_room_by_id(id=room_id)
-    return render_template('/client/pages/checkout.html',
-        room=room
+    customer_types_db = utils.get_customer_type()
+    return render_template('/client/pages/checkout.html'
+        , room=room
+        , customer_types_db=customer_types_db
+        , success_msg=success_msg
+        , err_msg=err_msg
     )
 
 
