@@ -1,13 +1,13 @@
 from flask_admin import AdminIndexView
 from flask_admin.base import Admin, BaseView, expose
-from flask_admin.contrib.sqla import ModelView, view
+from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from flask_login.utils import logout_user
 from werkzeug.utils import redirect
 from wtforms.fields import TextAreaField
 
 from hotelapp import app, db, utils
-from hotelapp.models import Customer, CustomerType, Receipt, RoomType, Room, User, UserRole
+from hotelapp.models import Customer, CustomerType, Receipt, Reservation, RoomType, Room, User, UserRole
 
 
 # Admin View
@@ -64,12 +64,36 @@ class AdminAutheticatedView(ModelView):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
 
+class ReservationView(ModelView):
+    column_display_pk = True
+    column_filters = ['room_id', 'checkInTime', 'checkOutTime']
+    column_list = ('id', 'room_id', 'reserveBy', 'phone', 'checkInTime',
+                   'checkOutTime', 'customers')
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
+
+class CustomerView(ModelView):
+    column_display_pk = True
+    can_view_details = True
+    edit_model = True
+    details_modal = True
+    column_filters = ['name']
+    column_searchable_list = ['name']
+    column_list = ('id', 'name', 'idCard', 'address', 'reservations')
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
 admin = Admin(app, name='Hotel website administrator', template_mode='bootstrap4', index_view=AdminHomeView())
 
-admin.add_view(AdminAutheticatedView(RoomType, db.session))
+
 admin.add_view(RoomView(Room, db.session))
-admin.add_view(AdminAutheticatedView(CustomerType, db.session))
-admin.add_view(AdminAutheticatedView(Customer, db.session))
+admin.add_view(ReservationView(Reservation, db.session))
+admin.add_view(CustomerView(Customer, db.session))
 admin.add_view(AdminAutheticatedView(Receipt, db.session))
 admin.add_view(AdminAutheticatedView(User, db.session))
+admin.add_view(AdminAutheticatedView(RoomType, db.session))
+admin.add_view(AdminAutheticatedView(CustomerType, db.session))
 admin.add_view(LogoutView(name="Log out"))
