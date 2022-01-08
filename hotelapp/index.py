@@ -1,6 +1,7 @@
 import math
 from flask import render_template, request, redirect, url_for
 from sqlalchemy.sql.elements import Null
+from sqlalchemy.sql.expression import null
 from hotelapp import app, utils
 from hotelapp import login_manager
 from flask_login import current_user, login_user, logout_user
@@ -40,63 +41,48 @@ def home():
 
 @app.route("/checkout/<int:room_id>", methods=['GET', 'POST'])
 def checkout(room_id):
+    validation_message = ""
+    validation_is_valid = False
     room = utils.get_room_by_id(id=room_id)
     customer_types_db = utils.get_customer_type()
-    first_check_is_done = False
-    success_msg = ""
-    err_msg = ""
-    reserveBy = request.form.get('reserveBy')
-    phone = request.form.get('phone')
-    checkInTime = request.form.get('checkInTime')
-    checkOutTime = request.form.get('checkOutTime')
-    
-    customerNames = request.form.getlist('customerName[]')
-    customerTypes = request.form.getlist('customerType[]')
-    idCards = request.form.getlist('idCard[]')
-    addresses = request.form.getlist('address[]')
-    family_members = len(customerNames)
-    room_capacity = room.quantity
 
     if request.method == 'POST':
+        # reservation info
+        reserveBy = request.form.get('reserveBy')
+        phone = request.form.get('phone')
+        checkInTime = request.form.get('checkInTime')
+        checkOutTime = request.form.get('checkOutTime')
+
+        # Families info
+        customerNames = request.form.getlist('customerName[]')
+        customerTypes = request.form.getlist('customerType[]')
+        idCards = request.form.getlist('idCard[]')
+        addresses = request.form.getlist('address[]')
+        family_members = len(customerNames)
+        room_capacity = room.quantity
+
+        # Array of infos
         reserveInfos = [reserveBy, phone, checkInTime, checkOutTime]
         familyInfos = [customerNames, customerTypes, addresses]
 
-        # Reserve Room
+        # Validation steps
+        validation_result = utils.validate_reservation(reserveInfos, familyInfos, family_members, room_capacity, idCards)
+        validation_is_valid = validation_result[0]
+        validation_message = validation_result[1]
+        
+        # reserve Room steps after validation
         try:
-            # Check if customer has members
-            if family_members > 0:
-                # Check if customer enter more than room capacity
-                if family_members <= room_capacity:
-                    pass
-                else:
-                    err_msg = "Exceed person limit in a room"
-                    
-                # Check if customer enter family infos (any: True if any info True)
-                if any(familyInfos) or idCards:
-                    # Check if familyInfos contain empty value (all: True if all info True)
-                    if all(familyInfos):
-                        first_check_is_done = True
-                    else:
-                        err_msg = "Please enter full Family info in the form"
-            else:
-                first_check_is_done = True
-
-            # Check if ReserveInfo contain empty value 
-            if all(reserveInfos) and first_check_is_done:
+            if validation_is_valid:
                 utils.reserveRoom(customerNames, customerTypes, idCards, addresses, room_id, reserveBy, checkInTime, checkOutTime, phone)
-                success_msg = "Reserve Room Successfully"
-            else:
-                err_msg = "Please enter full reservation info in the form"
         except Exception as exception:
-            err_msg = 'Error from server: ' + str(exception)
+            validation_message = 'Error from server: ' + str(exception)
 
-    
     
     return render_template('/client/pages/checkout.html'
         , room=room
         , customer_types_db=customer_types_db
-        , success_msg=success_msg
-        , err_msg=err_msg
+        , success_msg=validation_message if validation_is_valid else ""
+        , err_msg=validation_message if not validation_is_valid else ""
     )
 
 

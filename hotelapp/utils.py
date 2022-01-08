@@ -128,7 +128,37 @@ def reserveRoom(customerNames, customerTypes, idCards, addresses,
         # Add Each Family Customer to CustomerReservation
         create_customer_reservation(new_reservation.id, new_customer.id)
     
-    
+
+def validate_reservation(reserveInfos, familyInfos, family_members, room_capacity, idCards):
+    first_check_is_done = False
+    # First Check if customer has members
+    if family_members > 0:
+        # Check if customer enter more than room capacity
+        if family_members <= room_capacity:
+            pass
+        else:
+            err_msg = "Exceed person limit in a room"
+            return False, err_msg
+            
+        # Check if customer enter family infos (any: True if any info True)
+        if any(familyInfos) or idCards:
+            # Check if familyInfos contain empty value (all: True if all info True)
+            if all(familyInfos):
+                first_check_is_done = True
+            else:
+                err_msg = "Please enter full Family info in the form"
+                return False, err_msg
+    else:
+        first_check_is_done = True
+
+    # Second Check if ReserveInfo contain empty value
+    if all(reserveInfos) and first_check_is_done:
+        success_msg = "Reserve Room Successfully"
+    else:
+        err_msg = "Please enter full reservation info in the form"
+        return False, err_msg
+
+    return True, success_msg
    
    
     
