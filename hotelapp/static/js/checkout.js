@@ -1,20 +1,20 @@
 // let remaining in checkout.html
-let customerContainer = document.getElementById('customer-container');
-let btnAddCustomer = document.getElementById('btn-add-customer');
-let btnDeleteCustomer = document.getElementById('btn-delete-customer');
-let customerCounterNumber = document.getElementById('customer-counter-number');
+const customerContainer = document.getElementById('customer-container');
+const btnAddCustomer = document.getElementById('btn-add-customer');
+const btnDeconsteCustomer = document.getElementById('btn-deconste-customer');
+const customerCounterNumber = document.getElementById('customer-counter-number');
+const familyMembersCounter = document.getElementById('family-members-counter');
+
+const price = document.getElementById('price');
+const dayOfStay = document.getElementById('date-of-stay');
+const totalAmount = document.getElementById('total-amount');
+const checkInTime = document.getElementById('checkInTime');
+const checkOutTime = document.getElementById('checkOutTime');
 let count = 0;
-let familyMembersCounter = document.getElementById('family-members-counter');
 
-let price = document.getElementById('price');
-let dayOfStay = document.getElementById('date-of-stay');
-let totalAmount = document.getElementById('total-amount');
-let checkInTime = document.getElementById('checkInTime');
-let checkOutTime = document.getElementById('checkOutTime');
-
-function createCustomerBox(index = 0, customerName = '', customerType = {}, idCard = '', address = '') {
-    const customerBox = document.createElement("div");
-    customerBox.innerHTML = `
+function createCustomerBox(index = 0, customerName = '', customerTypes = customerTypesDiv.innerHTML, idCard = '', address = '') {
+  const customerBox = document.createElement("div");
+  customerBox.innerHTML = `
     <!-- Card -->
       <div id="checkout-form-${index}" class="card wish-list pb-1 mb-4">
 
@@ -36,19 +36,12 @@ function createCustomerBox(index = 0, customerName = '', customerType = {}, idCa
               
               
               <!-- Customer Type  -->
-              <div class="md-form md-outline mb-0 mb-lg-4">
-                <select name="customerType[]" class="browser-default custom-select" required>
-                  <option value="" selected>Chọn Loại Khách *</option>
-                  {% for customerTypedb in customer_types_db %}
-                  <option value="{{customerTypedb.id}}">{{customerTypedb.name}}</option>
-                  {% endfor %}
-                </select>
-              </div>
+              ${customerTypes}
 
               <!-- Id  -->
               <div class="md-form md-outline mb-0 mb-lg-4">
                 <input type="text" id="idCard[]" name="idCard[]" value="${idCard}" inputmode="numeric" pattern="[0-9\s]{8,12}" class="form-control mb-0 mb-lg-2">
-                <label for="idCard[]">CMND / CCCD (8 đến 12 số) (Bỏ trống CMND nếu không có)</label>
+                <label for="idCard[]">CMND / CCCD (8 đến 12 số) (Bỏ trống nếu không có)</label>
               </div>
               
               <!-- address  -->
@@ -63,49 +56,58 @@ function createCustomerBox(index = 0, customerName = '', customerType = {}, idCa
       </div>
     <!-- Card -->
     `;
-    return customerBox;
+  return customerBox;
 };
 
 function addCustomerBox() {
-    if (remaining > 0) {
-        parseInt(familyMembersCounter.innerText++);
-        count++;
-        remaining--;
-        customerContainer.appendChild(createCustomerBox(count));
-        updateCounterUI();
-    }
+  if (remaining > 0) {
+    parseInt(familyMembersCounter.innerText++);
+    count++;
+    remaining--;
+    customerContainer.appendChild(createCustomerBox(count));
+    updateCounterUI();
+  }
 };
 
 function deleteCustomerBox($target) {
-    if (confirm("Are you sure you want to delete this customer?")) {
-        document.querySelector($target).remove();
-        parseInt(familyMembersCounter.innerText--);
-        remaining++;
-        updateCounterUI();
-    }
+  if (confirm("Are you sure you want to delete this customer?")) {
+    document.querySelector($target).remove();
+    parseInt(familyMembersCounter.innerText--);
+    remaining++;
+    updateCounterUI();
+  }
 };
 
 function updateCounterUI() {
-    customerCounterNumber.innerHTML = remaining;
+  customerCounterNumber.innerHTML = remaining;
 };
 
 
-var DateDiff = {
-    inDays: function (d1, d2) {
-        var t2 = d2.getTime();
-        var t1 = d1.getTime();
+const DateDiff = {
+  inDays: function (d1, d2) {
+    let t2 = d2.getTime();
+    let t1 = d1.getTime();
 
-        return Math.floor((t2 - t1) / (24 * 3600 * 1000));
-    }
+    return Math.floor((t2 - t1) / (24 * 3600 * 1000));
+  }
 };
+
+const numberFormat = {
+  withDots: function (n) {
+    return n.toLocaleString();
+  },
+  withCommas: function (n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+}
 
 function getCheckValue() {
-    let d1 = new Date(checkInTime.value);
-    let d2 = new Date(checkOutTime.value);
-    let totalDay = DateDiff.inDays(d1, d2);
+  let d1 = new Date(checkInTime.value);
+  let d2 = new Date(checkOutTime.value);
+  let totalDay = DateDiff.inDays(d1, d2);
 
-    if (!isNaN(d1) && !isNaN(d2)) {
-        dayOfStay.innerText = (totalDay != NaN) ? totalDay : 0;
-        totalAmount.innerText = parseInt(price.innerText.replace(/,/g, "")) * totalDay;
-    }
+  if (!isNaN(d1) && !isNaN(d2)) {
+    dayOfStay.innerText = totalDay;
+    totalAmount.innerText = numberFormat.withCommas(parseInt(price.innerText.replace(/,/g, "")) * totalDay);
+  }
 };
