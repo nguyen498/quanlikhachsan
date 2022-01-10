@@ -1,6 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, Float, String, Boolean, Enum, DateTime, ForeignKey
 from sqlalchemy.orm import backref, relationship
+from sqlalchemy.sql.sqltypes import Numeric, Text
 from hotelapp import db
 from enum import Enum as UserEnum
 from flask_login import UserMixin
@@ -68,9 +69,10 @@ class Customer(BaseModel):
     __tablename__ = 'customer'
 
     name = Column(String(50), nullable=False)
+    phone = Column(Numeric(50), nullable=True)
     idCard = Column(String(50), nullable=True)
-    address = Column(String(255), nullable=False)
-    type_id = Column(Integer, ForeignKey(CustomerType.id), nullable=False)
+    address = Column(String(255), nullable=True)
+    type_id = Column(Integer, ForeignKey(CustomerType.id), nullable=True)
 
     def __str__(self):
         return self.name
@@ -101,82 +103,109 @@ class Receipt(BaseModel):
     checkInTime = Column(DateTime, default=datetime.now())
     checkOutTime = Column(DateTime, default=datetime.now())
     unitPrice = Column(Float, default=0)
-    surcharge = Column(Float, default=0)
     customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
     reservation_id = Column(Integer, ForeignKey(Reservation.id), nullable=False)
+    # registration_id = 
+    surcharges = relationship('Surcharge', secondary='receipt_surcharge', lazy='subquery',
+                        backref=backref('receipts', lazy=True))
+
+class Surcharge(BaseModel):
+    __tablename__ = 'surcharge'
+
+    description = Column(Text(255), nullable=False)
+    ratio = Column(Float, default=1)
+
+    def __str__(self):
+        return '* ' + str(self.ratio)
+
+
+class ReceiptSurcharge(BaseModel):
+    __tablename__ = 'receipt_surcharge'
+
+    receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False, primary_key=True)
+    surcharge_id = Column(Integer, ForeignKey(Surcharge.id), nullable=False, primary_key=True)
+
+
+
 
 if __name__ == '__main__':
     db.create_all()
 
-    # ct1 = CustomerType(name='Quốc Tế')
-    # ct2 = CustomerType(name='Trong Nước')
+    s1 = Surcharge(description="Khách hàng >= 3", ratio=1.25)
+    s2 = Surcharge(description="Có khách quốc tế", ratio=1.5)
 
-    # db.session.add(ct1)
-    # db.session.add(ct2)
+    db.session.add(s1)
+    db.session.add(s2)
 
-    # k1 = RoomType(name='Phòng đơn')
-    # k2 = RoomType(name='Phòng đôi')
-    # k3 = RoomType(name='Phòng ba')
-    # k4 = RoomType(name='Phòng gia đình')
-    # k5 = RoomType(name='Homestay')
+    ct1 = CustomerType(name='Quốc Tế')
+    ct2 = CustomerType(name='Trong Nước')
+
+    db.session.add(ct1)
+    db.session.add(ct2)
+
+    k1 = RoomType(name='Phòng đơn')
+    k2 = RoomType(name='Phòng đôi')
+    k3 = RoomType(name='Phòng ba')
+    k4 = RoomType(name='Phòng gia đình')
+    k5 = RoomType(name='Homestay')
     
-    # db.session.add(k1)
-    # db.session.add(k2)
-    # db.session.add(k3)
-    # db.session.add(k4)
-    # db.session.add(k5)
+    db.session.add(k1)
+    db.session.add(k2)
+    db.session.add(k3)
+    db.session.add(k4)
+    db.session.add(k5)
     
-    # rooms = [{
-    #     "id": 1,
-    #     "name": "Deluxe giường đơn",
-    #     "description": "Wifi miễn phí\n1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
-    #     "price": 400000,
-    #     "image": "images/p1.png",
-    #     "quantity": 2,
-    #     "category_id": 1
-    # }, {
-    #     "id": 2,
-    #     "name": "Phòng hai giường thường",
-    #     "description": "Wifi miễn phí\n1 giường lớn,1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
-    #     "price": 700000,
-    #     "image": "images/p2.png",
-    #     "quantity": 4,
-    #     "category_id": 2
-    # }, {
-    #     "id": 3,
-    #     "name": "Phòng ba giường thường",
-    #     "description": "Wifi miễn phí\n1 giường lớn, 2 giường nhỏ\nDiện tích phòng: 50 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
-    #     "price": 1000000,
-    #     "image": "images/p3.png",
-    #     "quantity": 6,
-    #     "category_id": 3
-    # }, {
-    #     "id": 4,
-    #     "name": "Phòng gia đình thường",
-    #     "description": "Wifi miễn phí\n2 giường lớn, 1 giường nhỏ\nDiện tích phòng: 60 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
-    #     "price": 1200000,
-    #     "image": "images/p4.png",
-    #     "quantity": 6,
-    #     "category_id": 4
-    # }, {
-    #     "id": 5,
-    #     "name": "Homestay",
-    #     "description": "Wifi miễn phí\n2 phòng lớn, 2 phòng nhỏ\nDiện tích nhà: 100 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
-    #     "price": 3000000,
-    #     "image": "images/p5.png",
-    #     "quantity": 8,
-    #     "category_id": 5
-    # }]
+    rooms = [{
+        "id": 1,
+        "name": "Deluxe giường đơn",
+        "description": "Wifi miễn phí\n1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+        "price": 400000,
+        "image": "images/p1.png",
+        "quantity": 2,
+        "category_id": 1
+    }, {
+        "id": 2,
+        "name": "Phòng hai giường thường",
+        "description": "Wifi miễn phí\n1 giường lớn,1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+        "price": 700000,
+        "image": "images/p2.png",
+        "quantity": 4,
+        "category_id": 2
+    }, {
+        "id": 3,
+        "name": "Phòng ba giường thường",
+        "description": "Wifi miễn phí\n1 giường lớn, 2 giường nhỏ\nDiện tích phòng: 50 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+        "price": 1000000,
+        "image": "images/p3.png",
+        "quantity": 6,
+        "category_id": 3
+    }, {
+        "id": 4,
+        "name": "Phòng gia đình thường",
+        "description": "Wifi miễn phí\n2 giường lớn, 1 giường nhỏ\nDiện tích phòng: 60 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+        "price": 1200000,
+        "image": "images/p4.png",
+        "quantity": 6,
+        "category_id": 4
+    }, {
+        "id": 5,
+        "name": "Homestay",
+        "description": "Wifi miễn phí\n2 phòng lớn, 2 phòng nhỏ\nDiện tích nhà: 100 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm",
+        "price": 3000000,
+        "image": "images/p5.png",
+        "quantity": 8,
+        "category_id": 5
+    }]
     
-    # for r in rooms:
-    #     ro = Room(name=r['name'], price=r['price'], image=r['image'], quantity=r['quantity'],
-    #               description=r['description'], category_id=r['category_id'])
-    #     db.session.add(ro)
+    for r in rooms:
+        ro = Room(name=r['name'], price=r['price'], image=r['image'], quantity=r['quantity'],
+                  description=r['description'], category_id=r['category_id'])
+        db.session.add(ro)
     
-    # db.session.commit()
+    db.session.commit()
     
-    # r = Room(name='phong mot giuong vip',
-    #          description='Wifi miễn phí\n1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm',
-    #          price='1000000', image="images/p1.png", category_id='1')
-    # db.session.add(r)
-    # db.session.commit()
+    r = Room(name='phong mot giuong vip',
+             description='Wifi miễn phí\n1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm',
+             price='1000000', image="images/p1.png", category_id='1')
+    db.session.add(r)
+    db.session.commit()

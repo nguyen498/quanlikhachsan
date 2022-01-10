@@ -1,5 +1,5 @@
 from hotelapp import app, db
-from hotelapp.models import Customer, CustomerReservation, CustomerType, Reservation, RoomType, Room, User, UserRole
+from hotelapp.models import Customer, CustomerReservation, CustomerType, Receipt, ReceiptSurcharge, Reservation, RoomType, Room, Surcharge, User, UserRole
 from sqlalchemy import  func
 import hashlib
 
@@ -82,13 +82,19 @@ def get_room_by_id(id):
 def get_customer_type():
     return CustomerType.query.all()
 
+def get_customer_type_by_name(name):
+    return CustomerType.query.filter(CustomerType.name.__eq__(name)).first()
 
-def create_customer(name, idCard, customerType, address):
+def get_surcharge_by_id(id):
+    return Surcharge.query.filter(Surcharge.id.__eq__(id)).first()
+
+def create_customer(name, idCard=None, customerType=None, address=None, phone=None):
     new_customer = Customer(
         name=name,
         idCard=idCard,
         address=address,
-        type_id=customerType
+        type_id=customerType,
+        phone=phone
     )
     db.session.add(new_customer)
     db.session.commit()
@@ -128,6 +134,33 @@ def reserveRoom(customerNames, customerTypes, idCards, addresses,
         # Add Each Family Customer to CustomerReservation
         create_customer_reservation(new_reservation.id, new_customer.id)
     
+    return new_reservation
+
+
+def create_receipt(checkInTime, checkOutTime, unitPrice, customer_id, reservation_id):
+    new_receipt = Receipt(
+        checkInTime=checkInTime
+        , checkOutTime=checkOutTime
+        , unitPrice=unitPrice
+        , customer_id=customer_id
+        , reservation_id=reservation_id
+    )
+    db.session.add(new_receipt)
+    db.session.commit()
+
+    return new_receipt
+
+
+def create_receipt_surcharge(receipt_id, surcharge_id):
+    new_receipt_surcharge = ReceiptSurcharge(
+        receipt_id=receipt_id
+        , surcharge_id=surcharge_id
+    )
+    db.session.add(new_receipt_surcharge)
+    db.session.commit()
+
+    return new_receipt_surcharge
+
 
 def validate_reservation(reserveInfos, familyInfos, family_members, room_capacity, idCards):
     first_check_is_done = False

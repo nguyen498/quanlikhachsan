@@ -153,10 +153,13 @@
                 <div>
                   <strong>Mức Phí ước tính</strong>
                   <strong>
-                    <p class="mb-0">(including VAT)</p>
+                    <p class="mb-0">(Đã bao gồm VAT)</p>
+                  </strong>
+                  <strong>
+                    <p class="mb-0">(Chưa bao gồm phụ thu)</p>
                   </strong>
                 </div>
-                <span><strong id="total-amount">{{ "{:,.0f}".format(room.price) }}</strong><span class="ml-1"><strong>VNĐ/Ngày</strong></span></span>
+                <span><strong id="total-amount">{{ "{:,.0f}".format(room.price) }}</strong><span class="ml-1"><strong>VNĐ</strong></span></span>
               </li>
             </ul>
 
@@ -223,6 +226,16 @@
 {% block scripts %}
 <script>
   let remaining = {{ room.quantity }};
+  const customerTypesDiv = document.createElement("div");
+  customerTypesDiv.className = "md-form md-outline mb-0 mb-lg-4";
+  customerTypesDiv.innerHTML = `
+  <select name="customerType[]" class="browser-default custom-select" required>
+    <option value="" selected>Chọn Loại Khách *</option>
+    {% for customerTypedb in customer_types_db %}
+    <option value="{{customerTypedb.id}}">{{ customerTypedb.name }}</option>
+    {% endfor %}
+  </select>
+  `;
 </script>
 <script src="{{ url_for('static', filename='js/checkout.js')}}"></script>
 {% endblock scripts %}
