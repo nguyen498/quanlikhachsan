@@ -1,3 +1,4 @@
+from datetime import datetime
 import math
 from flask import render_template, request, redirect, url_for
 from sqlalchemy.sql.elements import Null
@@ -5,7 +6,7 @@ from sqlalchemy.sql.expression import null
 from hotelapp import app, utils
 from hotelapp import login_manager
 from flask_login import current_user, login_user, logout_user
-from hotelapp.models import UserRole
+from hotelapp.models import Surcharge, UserRole
 from hotelapp.admin import *
 
 # You will need to provide a user_loader callback.
@@ -45,13 +46,24 @@ def checkout(room_id):
     validation_is_valid = False
     room = utils.get_room_by_id(id=room_id)
     customer_types_db = utils.get_customer_type()
+    
 
     if request.method == 'POST':
+        # Surcharge Variables
+        customer_foreign_type_db = utils.get_customer_type_by_name("Quốc tế")
+
         # reservation info
         reserveBy = request.form.get('reserveBy')
         phone = request.form.get('phone')
         checkInTime = request.form.get('checkInTime')
         checkOutTime = request.form.get('checkOutTime')
+
+        # date format
+        date_format = "%Y-%m-%d"
+        d1 = datetime.strptime(checkInTime, date_format)
+        d2 = datetime.strptime(checkOutTime, date_format)
+        delta = d2 - d1
+        days_diff = delta.days
 
         # Families info
         customerNames = request.form.getlist('customerName[]')
@@ -70,11 +82,28 @@ def checkout(room_id):
         validation_is_valid = validation_result[0]
         validation_message = validation_result[1]
         
+       
         # reserve Room steps after validation
         try:
+
             if validation_is_valid:
-                utils.reserveRoom(customerNames, customerTypes, idCards, addresses, room_id, reserveBy, checkInTime, checkOutTime, phone)
+                # Lưu người đặt phòng
+                reservePerson = utils.create_customer(name=reserveBy, phone=phone)
+                # Đặt phòng
+                reservation = utils.reserveRoom(customerNames, customerTypes, idCards, addresses, room_id, reserveBy, checkInTime, checkOutTime, phone)
+                # Tính tiền phòng theo số ngày
+                total_amount = room.price * days_diff
+                # Tạo hóa đơn
+                receipt = utils.create_receipt(checkInTime=checkInTime, checkOutTime=checkOutTime, unitPrice=total_amount,
+                                     customer_id=reservePerson.id, reservation_id=reservation.id)
+                # Thêm phụ thu id vào ReceiptSurcharge của hó đơn vừa tạo
+                if family_members >= 3:
+                    utils.create_receipt_surcharge(receipt.id, utils.get_surcharge_by_id(1).id)
+                if [customer_type_id for customer_type_id in customerTypes if str(customer_type_id).__eq__(str(customer_foreign_type_db.id))]:
+                    utils.create_receipt_surcharge(receipt.id, utils.get_surcharge_by_id(2).id)
+
         except Exception as exception:
+            validation_is_valid = False
             validation_message = 'Error from server: ' + str(exception)
 
     

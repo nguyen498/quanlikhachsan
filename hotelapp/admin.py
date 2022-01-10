@@ -86,13 +86,20 @@ class CustomerView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
+class ReceiptView(ModelView):
+    column_list = ('checkInTime', 'checkOutTime', 'unitPrice',
+                   'customer_id', 'reservation_id', 'surcharges')
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
 admin = Admin(app, name='Hotel website administrator', template_mode='bootstrap4', index_view=AdminHomeView())
 
 
 admin.add_view(RoomView(Room, db.session))
 admin.add_view(ReservationView(Reservation, db.session))
 admin.add_view(CustomerView(Customer, db.session))
-admin.add_view(AdminAutheticatedView(Receipt, db.session))
+admin.add_view(ReceiptView(Receipt, db.session))
 admin.add_view(AdminAutheticatedView(User, db.session))
 admin.add_view(AdminAutheticatedView(RoomType, db.session))
 admin.add_view(AdminAutheticatedView(CustomerType, db.session))
