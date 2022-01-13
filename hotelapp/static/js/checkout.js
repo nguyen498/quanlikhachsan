@@ -35,7 +35,7 @@ function createCustomerBox(index = 0, customerName = '', customerTypes = custome
               </div>
               
               
-              <!-- Customer Type  -->
+              <!-- Customer Type -->
               ${customerTypes}
 
               <!-- Id  -->

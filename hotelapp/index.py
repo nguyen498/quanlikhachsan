@@ -27,6 +27,15 @@ def admin_login():
         return redirect('admin')
 
 
+@app.route('/receipt-payment/<int:selected_room_id>', methods=['GET', 'POST'])
+def receipt_payment(selected_room_id):
+    error_msg = ""
+    if request.method == 'POST':
+        # Chuyển trạng thái phòng sang đã đặt
+        utils.set_room_status_by_id(selected_room_id, True)
+
+    return redirect('/admin')
+
 # Client
 @app.route("/")
 def home():
@@ -96,6 +105,8 @@ def checkout(room_id):
                 # Tạo hóa đơn
                 receipt = utils.create_receipt(checkInTime=checkInTime, checkOutTime=checkOutTime, unitPrice=total_amount,
                                      customer_id=reservePerson.id, reservation_id=reservation.id)
+                # Chuyển trạng thái phòng sang đã đặt
+                utils.set_room_status_by_id(room_id, False)
                 # Thêm phụ thu id vào ReceiptSurcharge của hó đơn vừa tạo
                 if family_members >= 3:
                     utils.create_receipt_surcharge(receipt.id, utils.get_surcharge_by_id(1).id)
