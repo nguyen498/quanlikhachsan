@@ -168,7 +168,8 @@ class MakeRegistrationView(BaseView):
             , success_msg=success_msg
         )
 
-
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
 
 admin = Admin(app, name='Admin', template_mode='bootstrap4', index_view=AdminHomeView())

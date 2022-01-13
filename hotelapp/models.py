@@ -151,33 +151,33 @@ if __name__ == '__main__':
 
     # admin2 = User(name="admin2", username="admin2",
     #               password="202cb962ac59075b964b07152d234b70", email="123", active=True, user_role="ADMIN")
-
+    #
     # db.session.add(admin2)
-
+    #
     # s1 = Surcharge(description="Khách hàng >= 3", ratio=1.25)
     # s2 = Surcharge(description="Có khách quốc tế", ratio=1.5)
-
+    #
     # db.session.add(s1)
     # db.session.add(s2)
-
+    #
     # ct1 = CustomerType(name='Quốc Tế')
     # ct2 = CustomerType(name='Trong Nước')
-
+    #
     # db.session.add(ct1)
     # db.session.add(ct2)
-
+    #
     # k1 = RoomType(name='Phòng đơn')
     # k2 = RoomType(name='Phòng đôi')
     # k3 = RoomType(name='Phòng ba')
     # k4 = RoomType(name='Phòng gia đình')
     # k5 = RoomType(name='Homestay')
-    
+    #
     # db.session.add(k1)
     # db.session.add(k2)
     # db.session.add(k3)
     # db.session.add(k4)
     # db.session.add(k5)
-    
+    #
     # rooms = [{
     #     "id": 1,
     #     "name": "Deluxe giường đơn",
@@ -219,14 +219,14 @@ if __name__ == '__main__':
     #     "quantity": 8,
     #     "category_id": 5
     # }]
-    
+    #
     # for r in rooms:
     #     ro = Room(name=r['name'], price=r['price'], image=r['image'], quantity=r['quantity'],
     #               description=r['description'], category_id=r['category_id'])
     #     db.session.add(ro)
-    
+    #
     # db.session.commit()
-    
+    #
     # r = Room(name='phong mot giuong vip',
     #          description='Wifi miễn phí\n1 giường nhỏ\nDiện tích phòng: 32 m²\nHướng phòng: Thành phố\nPhòng tắm vòi sen & bồn tắm',
     #          price='1000000', image="images/p1.png", category_id='1')
