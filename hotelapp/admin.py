@@ -1,4 +1,5 @@
 from datetime import datetime
+from re import T
 from flask import request
 from flask_admin import AdminIndexView
 from flask_admin.base import Admin, BaseView, expose
@@ -30,7 +31,7 @@ class RoomView(ModelView):
     can_export = True
     column_searchable_list = ['name', 'description']
     column_filters = ['name', 'price']
-    column_exclude_list = ['image', 'active', 'created_date']
+    column_exclude_list = ['image', 'created_date']
     form_overrides = dict(description=TextAreaField)
     form_widget_args = {
         'description': {
@@ -42,7 +43,7 @@ class RoomView(ModelView):
         'description': 'Mo ta',
         'price': 'Gia',
         'image': 'Anh dai dien',
-        'kind_id': 'Loai phong'
+        'kind_id': 'Loai phong',
     }
     column_sortable_list = ['id', 'name', 'price']
 
@@ -108,7 +109,7 @@ class ReceiptView(ModelView):
 class MakeRegistrationView(BaseView):
     @expose('/', methods=['get', 'post'])
     def registration(self):
-        rooms = utils.get_room()
+        rooms = utils.get_rooms()
         customer_types_db = utils.get_customer_type()
         selected_room = ""
         success_msg = ""
@@ -150,6 +151,8 @@ class MakeRegistrationView(BaseView):
             # Tạo hóa đơn
             receipt = utils.create_receipt(checkInTime=checkInTime, checkOutTime=checkOutTime, unitPrice=total_amount,
                                            customer_id=first_customer.id, registration_id=registration.id)
+            # Chuyển trạng thái phòng sang đã đặt
+            utils.set_room_status_by_id(selected_room_id, False)
             # Thêm phụ thu id vào ReceiptSurcharge của hó đơn vừa tạo
             if family_members >= 3:
                 utils.create_receipt_surcharge(receipt.id, utils.get_surcharge_by_id(1).id)
@@ -169,7 +172,45 @@ class MakeRegistrationView(BaseView):
         )
 
 
+# receipt payment
+class ReceiptPaymentView(BaseView):
+    @expose('/', methods=['get', 'post'])
+    def ReceiptPayment(self):
+        receipts = utils.get_receipts()
+        selected_receipt = ""
+        customer_name = ""
+        room_id = 0
+        total_amount = 0
+        second_post = request.form.get('second_post')
+        # Select receipt Variables
+        selected_receipt_id = request.form.get('selected_receipt_id')
+        
 
+        if request.method == 'POST':
+            
+            filter_result = utils.get_receipt_by_id(selected_receipt_id)
+            selected_receipt = filter_result[0]
+            registration = filter_result[1]
+            customer = filter_result[2]
+            customer_name = customer.name
+            room_id = registration.room_id
+            total_amount = selected_receipt.unitPrice
+
+            results = utils.get_receipt_surcharges(selected_receipt.id)
+       
+            if results:
+                for result in results:
+                    total_amount = total_amount * result.Surcharge.ratio
+            
+
+        return self.render(
+            'admin/pages/receipt_payment.html'
+            , receipts=receipts
+            , selected_receipt=selected_receipt
+            , customer_name=customer_name
+            , room_id=room_id
+            , total_amount=total_amount
+        )
 
 admin = Admin(app, name='Admin', template_mode='bootstrap4', index_view=AdminHomeView())
 
@@ -180,6 +221,7 @@ admin.add_view(RegistrationView(Registration, db.session))
 admin.add_view(RoomView(Room, db.session))
 admin.add_view(ReservationView(Reservation, db.session))
 admin.add_view(CustomerView(Customer, db.session))
+admin.add_view(ReceiptPaymentView(name='Receipt Payment'))
 admin.add_view(ReceiptView(Receipt, db.session))
 admin.add_view(AdminAutheticatedView(User, db.session))
 admin.add_view(AdminAutheticatedView(RoomType, db.session))

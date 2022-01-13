@@ -56,7 +56,8 @@ def get_user_by_id(user_id):
 def get_category_by_id(category_id):
     return RoomType.query.get(category_id)
 
-
+def get_rooms():
+    return Room.query.all()
 
 
 
@@ -81,6 +82,30 @@ def get_room_by_id(id):
 
 def get_customer_type():
     return CustomerType.query.all()
+
+
+
+def get_receipts():
+    return Receipt.query.all()
+
+def get_receipt_by_id(id):
+    return db.session.query(Receipt, Registration, Customer, Surcharge)\
+                    .filter(Receipt.id.__eq__(id))\
+                    .join(Customer, Receipt.customer_id.__eq__(Customer.id))\
+                    .join(Registration, Receipt.registration_id.__eq__(Registration.id))\
+                    .join(Surcharge, Receipt.registration_id.__eq__(Registration.id))\
+                    .first()\
+
+def get_receipt_surcharges(receipt_id):
+    return db.session.query(ReceiptSurcharge, Surcharge)\
+                    .filter(ReceiptSurcharge.receipt_id.__eq__(receipt_id))\
+                    .join(Surcharge, ReceiptSurcharge.surcharge_id.__eq__(Surcharge.id))\
+                    .all()\
+
+def set_room_status_by_id(room_id, room_status):
+    room = Room.query.get(room_id)
+    room.active = room_status
+    db.session.commit()
 
 def get_customer_type_by_name(name):
     return CustomerType.query.filter(CustomerType.name.__eq__(name)).first()
