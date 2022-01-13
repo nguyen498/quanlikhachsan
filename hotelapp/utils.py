@@ -1,5 +1,5 @@
 from hotelapp import app, db
-from hotelapp.models import Customer, CustomerReservation, CustomerType, Receipt, ReceiptSurcharge, Reservation, RoomType, Room, Surcharge, User, UserRole
+from hotelapp.models import Customer, CustomerRegistration, CustomerReservation, CustomerType, Receipt, ReceiptSurcharge, Registration, Reservation, RoomType, Room, Surcharge, User, UserRole
 from sqlalchemy import  func
 import hashlib
 
@@ -122,7 +122,6 @@ def create_customer_reservation(reservation_id, customer_id):
     db.session.add(new_customer_reservation)
     db.session.commit()
 
-
 def reserveRoom(customerNames, customerTypes, idCards, addresses,
                 room_id, reserveBy, checkInTime, checkoutTime, phone):
     # Create reservation
@@ -137,13 +136,52 @@ def reserveRoom(customerNames, customerTypes, idCards, addresses,
     return new_reservation
 
 
-def create_receipt(checkInTime, checkOutTime, unitPrice, customer_id, reservation_id):
+
+def create_customer_registration(registration_id, customer_id):
+    new_customer_registration = CustomerRegistration(
+        registration_id=registration_id,
+        customer_id=customer_id
+    )
+    db.session.add(new_customer_registration)
+    db.session.commit()
+
+
+def create_registration(room_id, checkInTime, checkOutTime):
+    new_registration = Registration(
+        room_id=room_id
+        , checkInTime=checkInTime
+        , checkOutTime=checkOutTime
+    )
+    db.session.add(new_registration)
+    db.session.commit()
+    return new_registration
+
+
+def registerRoom(customerNames, customerTypes, idCards, addresses,
+                room_id, checkInTime, checkoutTime):
+    # Create registration
+    new_registration = create_registration(room_id, checkInTime, checkoutTime)
+    
+    for i in range(0, len(customerNames)):
+        # Create Each Customer
+        new_customer = create_customer(customerNames[i], idCards[i], customerTypes[i], addresses[i])
+        # Add Each Family Customer to Customerregistration
+        create_customer_registration(new_registration.id, new_customer.id)
+        # Gán khách hàng đầu tiên vào biến first_customer
+        if i == 0:
+            first_customer = new_customer
+    
+    return new_registration, first_customer
+
+
+def create_receipt(checkInTime, checkOutTime, unitPrice, customer_id, reservation_id=None, registration_id=None):
     new_receipt = Receipt(
         checkInTime=checkInTime
         , checkOutTime=checkOutTime
         , unitPrice=unitPrice
         , customer_id=customer_id
         , reservation_id=reservation_id
+        , registration_id=registration_id
     )
     db.session.add(new_receipt)
     db.session.commit()
@@ -160,6 +198,7 @@ def create_receipt_surcharge(receipt_id, surcharge_id):
     db.session.commit()
 
     return new_receipt_surcharge
+    
 
 
 def validate_reservation(reserveInfos, familyInfos, family_members, room_capacity, idCards):

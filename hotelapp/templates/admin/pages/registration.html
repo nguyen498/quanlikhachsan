@@ -1,0 +1,118 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+
+
+<section class="container mt-4" style="min-height: 300px;">
+
+    <form method="post">
+        
+
+        {% include 'client/layout/message.html' %}
+        
+        {% if not selected_room %}
+            <!-- Phòng thuê -->
+            <div class="form-group mb-0 mb-lg-4">
+                <label for="room">Phòng Thuê *</label>
+                <select name="selected_room_id" class="form-control">
+                    <option value="">Chọn phòng</option>
+                    {% for room in rooms %}
+                    <option value="{{ room.id }}">{{ room.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <input type="hidden" name="first_post" value=true>
+
+            <input type="submit">
+
+        {% else %}
+
+            <input type="hidden" name="second_post" value=true>
+
+            <!-- Phòng thuê -->
+            <div class="form-group mb-0 mb-lg-4">
+                <label for="room">Phòng Thuê *</label>
+                <select name="selected_room_id" class="form-control" style="background: #dddddd52;">
+                    <option value="{{ selected_room.id }}" selected>{{ selected_room.name }}</option>
+                </select>
+            </div>
+
+            <!-- Checkin time -->
+            <div class="form-group input-with-post-icon datepicker" inline="true">
+                <label for="checkInTime">Ngày nhận phòng *</label>
+                <input type="date" id="checkInTime" name="checkInTime" value="{{ checkInTime }}"
+                    class="form-control" required>
+            </div>
+            
+            
+            <!-- Checkout time -->
+            <div class="form-group input-with-post-icon datepicker">
+                <label for="form16">Ngày trả phòng *</label>
+                <input type="date" id="checkOutTime" name="checkOutTime" value="{{ checkOutTime }}"
+                    class="form-control" required>
+            </div>
+            
+            {% for index in range(0, selected_room.quantity) %}
+                <!-- Card -->
+                <div id="checkout-form-1" class="card wish-list pb-1 mb-4 mt-4">
+                    <div class="card-body">
+                        <a class="dark-grey-text d-flex justify-content-between collapsed" data-toggle="collapse"
+                            href="#customerCollapse-1" aria-expanded="false" aria-controls="customerCollapse-1">
+                            Khách Hàng {{ index + 1 }}
+                            <span id="btn-delete-customer"
+                                class="d-flex align-items-center badge badge-danger ml-auto mr-4">Delete</span>
+                            <span><i class="fas fa-chevron-down pt-1"></i></span>
+                        </a>
+                
+                        <div class="collapse" id="customerCollapse-1">
+                            <div class="mt-3">
+                                <!-- Customer Name -->
+                                <div class="form-group mb-0 mb-lg-4">
+                                    <label for="customerName[]">Tên Khách Hàng *</label>
+                                    <input type="text" id="customerName[]" name="customerName[]" value=""
+                                        class="form-control mb-0 mb-lg-2" required="">
+                                </div>
+                
+                                <!-- Customer Type  -->
+                                <div class="form-group mb-0 mb-lg-4">
+                                    <label for="room">Loại Khách *</label>
+                                    <select name="customerType[]" class="form-control" required>
+                                        <option value="" selected="">Chọn Loại Khách *</option>
+                                        {% for customer_type in customer_types_db %}
+                                        <option value="{{customer_type.id}}">{{ customer_type.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                
+                
+                                <!-- Id  -->
+                                <div class="form-group mb-0 mb-lg-4">
+                                    <label for="idCard[]">CMND / CCCD (8 đến 12 số) (Bỏ trống nếu không có)</label>
+                                    <input type="text" id="idCard[]" name="idCard[]" value="" inputmode="numeric" pattern="[0-9s]{8,12}"
+                                        class="form-control mb-0 mb-lg-2">
+                                </div>
+                
+                                <!-- address  -->
+                                <div class="form-group mb-0 mb-lg-4">
+                                    <label for="address[]">Địa Chỉ *</label>
+                                    <input type="text" id="address[]" name="address[]" value="" class="form-control mb-0 mb-lg-2"
+                                        required="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- Card -->
+            {% endfor %}
+            
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        {% endif %}
+        
+    </form>
+
+
+</section>
+
+{% endblock %}
