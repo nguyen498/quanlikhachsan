@@ -9,7 +9,7 @@ from werkzeug.utils import redirect
 from wtforms.fields import TextAreaField
 
 from hotelapp import app, db, utils
-from hotelapp.models import (Customer, CustomerType, Receipt, Reservation,
+from hotelapp.models import (Customer, CustomerType, Receipt, Registration, Reservation,
                              Room, RoomType, User, UserRole)
 
 
@@ -76,6 +76,14 @@ class ReservationView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
+class RegistrationView(ModelView):
+    column_display_pk = True
+    column_filters = ['room_id', 'checkInTime', 'checkOutTime']
+    column_list = ('id', 'checkInTime', 'checkOutTime', 'room_id', 'customers')
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
 
 class CustomerView(ModelView):
     column_display_pk = True
@@ -91,13 +99,13 @@ class CustomerView(ModelView):
 
 class ReceiptView(ModelView):
     column_list = ('checkInTime', 'checkOutTime', 'unitPrice',
-                   'customer_id', 'reservation_id', 'surcharges')
+                   'customer_id', 'reservation_id', 'registration_id', 'surcharges')
 
     def is_accessible(self):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
 
-class RegistrationView(BaseView):
+class MakeRegistrationView(BaseView):
     @expose('/', methods=['get', 'post'])
     def registration(self):
         rooms = utils.get_room()
@@ -105,15 +113,9 @@ class RegistrationView(BaseView):
         selected_room = ""
         success_msg = ""
         second_post = request.form.get('second_post')
-        print("second_post")
-        print(second_post)
         # Select Room Variables
         selected_room_id = request.form.get('selected_room_id')
         selected_room = utils.get_room_by_id(selected_room_id)
-
-        print("selected_room_id")
-        print(selected_room_id)
-        
 
 
         if request.method == 'POST' and second_post:
@@ -123,8 +125,6 @@ class RegistrationView(BaseView):
             # reservation info
             checkInTime = request.form.get('checkInTime')
             checkOutTime = request.form.get('checkOutTime')
-
-            print(checkInTime)
 
             # date format
             date_format = "%Y-%m-%d"
@@ -139,8 +139,6 @@ class RegistrationView(BaseView):
             idCards = request.form.getlist('idCard[]')
             addresses = request.form.getlist('address[]')
             family_members = len(customerNames)
-
-            print(customerNames)
 
             # Lập phiếu thuê phòng
             # thuê phòng
@@ -173,11 +171,12 @@ class RegistrationView(BaseView):
 
 
 
-admin = Admin(app, name='Hotel website administrator', template_mode='bootstrap4', index_view=AdminHomeView())
+admin = Admin(app, name='Admin', template_mode='bootstrap4', index_view=AdminHomeView())
 
 # Custom View
-admin.add_view(RegistrationView(name='Registration'))
+admin.add_view(MakeRegistrationView(name='Make Registration'))
 # Default View
+admin.add_view(RegistrationView(Registration, db.session))
 admin.add_view(RoomView(Room, db.session))
 admin.add_view(ReservationView(Reservation, db.session))
 admin.add_view(CustomerView(Customer, db.session))
