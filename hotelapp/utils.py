@@ -1,7 +1,13 @@
-from hotelapp import app, db
-from hotelapp.models import Customer, CustomerRegistration, CustomerReservation, CustomerType, Receipt, ReceiptSurcharge, Registration, Reservation, RoomType, Room, Surcharge, User, UserRole
-from sqlalchemy import  func
 import hashlib
+from sqlite3 import Date
+from sqlalchemy import func, cast, Date
+from sqlalchemy.sql.expression import extract
+
+from hotelapp import app, db
+from hotelapp.models import (Customer, CustomerRegistration,
+                             CustomerReservation, CustomerType, Receipt,
+                             ReceiptSurcharge, Registration, Reservation, Room,
+                             RoomType, Surcharge, User, UserRole)
 
 
 def load_kindofroom():
@@ -102,6 +108,21 @@ def get_receipt_surcharges(receipt_id):
                     .join(Surcharge, ReceiptSurcharge.surcharge_id.__eq__(Surcharge.id))\
                     .all()\
 
+def get_receipts_by_month(month):
+    return db.session.query(Receipt, Room.name, func.sum(Receipt.unitPrice))\
+                    .join(Room, Receipt.room_id.__eq__(Room.id))\
+                    .filter(extract('month', Receipt.checkOutTime) == month)\
+                    .group_by(Receipt.room_id)\
+
+def get_rooms_by_month(month):
+    return db.session.query(Room, func.sum(
+                        func.date(Registration.checkOutTime) -
+                        func.date(Registration.checkInTime)
+                    ))\
+                    .join(Registration, Registration.room_id.__eq__(Room.id))\
+                    .filter(extract('month', Receipt.checkOutTime) == month)\
+                    .group_by(Room.id)\
+
 def set_room_status_by_id(room_id, room_status):
     room = Room.query.get(room_id)
     room.active = room_status
@@ -199,7 +220,7 @@ def registerRoom(customerNames, customerTypes, idCards, addresses,
     return new_registration, first_customer
 
 
-def create_receipt(checkInTime, checkOutTime, unitPrice, customer_id, reservation_id=None, registration_id=None):
+def create_receipt(checkInTime, checkOutTime, unitPrice, customer_id, reservation_id=None, registration_id=None, room_id=None):
     new_receipt = Receipt(
         checkInTime=checkInTime
         , checkOutTime=checkOutTime
@@ -207,11 +228,22 @@ def create_receipt(checkInTime, checkOutTime, unitPrice, customer_id, reservatio
         , customer_id=customer_id
         , reservation_id=reservation_id
         , registration_id=registration_id
+        , room_id=room_id
     )
     db.session.add(new_receipt)
     db.session.commit()
 
     return new_receipt
+
+def get_total_amount(total_amount=None, receipt_id=None):
+    receipt_surcharges = db.session.query(ReceiptSurcharge, Surcharge)\
+                        .filter(ReceiptSurcharge.receipt_id.__eq__(receipt_id))\
+                        .join(Surcharge, ReceiptSurcharge.surcharge_id.__eq__(Surcharge.id))\
+                        .all()\
+
+    if receipt_surcharges:
+        for receipt_surcharge in receipt_surcharges:
+            total_amount = total_amount * receipt_surcharge.Surcharge.ratio
 
 
 def create_receipt_surcharge(receipt_id, surcharge_id):

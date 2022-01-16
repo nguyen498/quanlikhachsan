@@ -14,6 +14,23 @@ from hotelapp.admin import *
 
 
 # Admin
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    # tất cả receipt cả phụ thu (lọc theo tháng)
+    receipts = utils.get_rooms_by_month(4)
+    print("receipts")
+    print(receipts)
+    # trong từng receipt * thêm phụ thu
+    for receipt in receipts:
+        print(receipt)
+        # (<Receipt 6>, 14500000.0)
+        # print(receipt[0].__dict__)
+        # receipt_in_month = receipt[0]
+        # total_amount_in_month = receipt[1]
+    pass
+    
+
+# Admin
 @app.route('/admin-login', methods=['GET', 'POST'])
 def admin_login():
     error_msg = ""
@@ -102,9 +119,13 @@ def checkout(room_id):
                 reservation = utils.reserveRoom(customerNames, customerTypes, idCards, addresses, room_id, reserveBy, checkInTime, checkOutTime, phone)
                 # Tính tiền phòng theo số ngày
                 total_amount = room.price * days_diff
+                if family_members >= 3:
+                    total_amount *= utils.get_surcharge_by_id(1).ratio
+                if [customer_type_id for customer_type_id in customerTypes if str(customer_type_id).__eq__(str(customer_foreign_type_db.id))]:
+                    total_amount *= utils.get_surcharge_by_id(2).ratio
                 # Tạo hóa đơn
                 receipt = utils.create_receipt(checkInTime=checkInTime, checkOutTime=checkOutTime, unitPrice=total_amount,
-                                     customer_id=reservePerson.id, reservation_id=reservation.id)
+                                     customer_id=reservePerson.id, reservation_id=reservation.id, room_id=room_id)
                 # Chuyển trạng thái phòng sang đã đặt
                 utils.set_room_status_by_id(room_id, False)
                 # Thêm phụ thu id vào ReceiptSurcharge của hó đơn vừa tạo

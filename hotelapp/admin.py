@@ -150,7 +150,7 @@ class MakeRegistrationView(BaseView):
             total_amount = selected_room.price * days_diff
             # Tạo hóa đơn
             receipt = utils.create_receipt(checkInTime=checkInTime, checkOutTime=checkOutTime, unitPrice=total_amount,
-                                           customer_id=first_customer.id, registration_id=registration.id)
+                                           customer_id=first_customer.id, registration_id=registration.id, room_id=selected_room_id)
             # Chuyển trạng thái phòng sang đã đặt
             utils.set_room_status_by_id(selected_room_id, False)
             # Thêm phụ thu id vào ReceiptSurcharge của hó đơn vừa tạo
@@ -171,6 +171,9 @@ class MakeRegistrationView(BaseView):
             , success_msg=success_msg
         )
 
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
 
 # receipt payment
 class ReceiptPaymentView(BaseView):
@@ -187,8 +190,10 @@ class ReceiptPaymentView(BaseView):
         
 
         if request.method == 'POST':
-            
+            print("selected_receipt_id")
+            print(selected_receipt_id)
             filter_result = utils.get_receipt_by_id(selected_receipt_id)
+            print(filter_result)
             selected_receipt = filter_result[0]
             registration = filter_result[1]
             customer = filter_result[2]
@@ -196,11 +201,11 @@ class ReceiptPaymentView(BaseView):
             room_id = registration.room_id
             total_amount = selected_receipt.unitPrice
 
-            results = utils.get_receipt_surcharges(selected_receipt.id)
+            # results = utils.get_receipt_surcharges(selected_receipt.id)
        
-            if results:
-                for result in results:
-                    total_amount = total_amount * result.Surcharge.ratio
+            # if results:
+            #     for result in results:
+            #         total_amount = total_amount * result.Surcharge.ratio
             
 
         return self.render(
@@ -212,8 +217,31 @@ class ReceiptPaymentView(BaseView):
             , total_amount=total_amount
         )
 
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
+
+
+class RevenueStatsView(BaseView):
+    @expose('/')
+    def ProductsStats(self):
+        month           = request.args.get('month')
+        # tất cả receipt cả phụ thu (lọc theo tháng)
+        receipts = utils.get_receipts_by_month(month)
+                
+        return self.render(
+            'admin/pages/revenueStats.html',
+            month=month,
+            receipts=receipts
+        )
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
 admin = Admin(app, name='Admin', template_mode='bootstrap4', index_view=AdminHomeView())
 
+# Stats View
+admin.add_view(RevenueStatsView(name='Revenue Stats'))
 # Custom View
 admin.add_view(MakeRegistrationView(name='Make Registration'))
 # Default View

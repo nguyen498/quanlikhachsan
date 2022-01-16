@@ -1,0 +1,105 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+
+
+<section class="chart container mt-4" id="chart" style="min-height: 300px;">
+    <h2>BÁO CÁO DOANH THU THEO THÁNG</h2>
+
+    <form class="mt-4 mb-4">
+        <div class="form-group">
+            <input list="suggestion" class="form-control" name="month" type="number" placeholder="Type Month" aria-label="Search">
+        </div>
+        <div class="input-group-append">
+            <button class="btn btn-block btn-secondary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <h1>Tháng {{ month }}</h1>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Loại phòng</th>
+                <th scope="col">Doanh thu</th>
+                <!-- <th scope="col">Tỷ lệ</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for receipt in receipts %}
+            <tr>
+                <th scope="row">{{loop.index + 1}}</th>
+                <td>{{ receipt[1] }}</td>
+                <td>{{ receipt[2] }} VNĐ</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div>
+        <canvas id="revenueMonthChart" width="400" height="400"></canvas>
+    </div>
+
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.1/dist/chart.min.js"></script>
+
+<script>
+    let labels = [], labels2 = []
+    let data = [], data2 = []
+    let colors = []
+    let borderColors = []
+    let r, b, g
+    let month = {{ month }}
+
+
+    {% for receipt in receipts %}
+
+    labels.push('{{ receipt[1] }}')
+    data.push({{ receipt[2] }})
+
+    r = parseInt(Math.random() * 256)
+    b = parseInt(Math.random() * 256)
+    g = parseInt(Math.random() * 256)
+
+    colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+    borderColors.push(`rgba(${r}, ${g}, ${b}, 1)`)
+
+    {% endfor %}
+
+    window.onload = function () {
+        const ctx = document.getElementById('revenueMonthChart').getContext('2d');
+
+        initChart(ctx, labels, data, `Doanh thu tháng ${month}`, 'bar', colors, borderColors)
+        // initChart(ctx2, labels2, data2, 'Products Revenue in {{ year }}', 'line', colors, borderColors)
+    };
+
+    function initChart(ctx, labels, data, title, type, colors, borderColors) {
+        const myChart = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: title,
+                    data: data,
+                    backgroundColor: colors,
+                    borderColor: borderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    };
+
+</script>
+{% endblock %}
+
